@@ -1,0 +1,167 @@
+
+/* =======================================
+   FONDO GENERAL
+======================================= */
+
+body {
+  background: #0f0f0f;
+  color: white;
+}
+
+/* =======================================
+   TITULOS
+======================================= */
+
+h1,
+h2,
+h3 {
+  color: #00c26e;
+}
+
+/* =======================================
+   CARD PRINCIPAL JUGADOR
+======================================= */
+
+.player-card {
+
+  background: linear-gradient(
+    145deg,
+    #1b1b1b,
+    #242424
+  ) !important;
+
+  border: 1px solid #2f2f2f;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  transition: all 0.3s ease;
+
+  color: white !important;
+}
+
+/* hover bonito */
+.player-card:hover {
+
+  transform: translateY(-6px);
+
+  border-color: #00c26e;
+
+  box-shadow: 0 0 25px rgba(0, 194, 110, 0.25);
+}
+
+/* =======================================
+   IMAGEN
+======================================= */
+
+.player-img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+}
+
+/* =======================================
+   TEXTO PRINCIPAL
+======================================= */
+
+.player-name {
+
+  color: #00c26e !important;
+
+  font-weight: bold;
+
+  margin-bottom: 5px;
+}
+
+.player-team {
+
+  color: #d1d5db !important;
+
+  margin-bottom: 10px;
+}
+
+/* =======================================
+   INFO INTERNA
+======================================= */
+
+.player-info p {
+
+  margin: 5px 0;
+
+  color: #f3f4f6 !important;
+}
+
+/* fallback global dentro de card */
+.player-card p,
+.player-card span,
+.player-card div {
+  color: #f3f4f6 !important;
+}
+
+/* =======================================
+   BADGES
+======================================= */
+
+.badge {
+  font-weight: 500;
+}
+
+/* =======================================
+   BOTONES
+======================================= */
+
+.btn-warning {
+  font-weight: 500;
+}
+
+.btn-danger {
+  font-weight: 500;
+}
+
+/* =======================================
+   SEPARADORES
+======================================= */
+
+hr {
+  border-color: #2f2f2f;
+  margin: 15px 0;
+}
+
+/* =======================================
+   FORMULARIOS (BUSCADOR)
+======================================= */
+
+input,
+select {
+
+  background-color: #1c1c1c !important;
+
+  color: white !important;
+
+  border: 1px solid #333 !important;
+}
+
+/* PLACEHOLDER */
+input::placeholder {
+  color: #9ca3af !important;
+  opacity: 1;
+}
+
+/* FOCUS */
+input:focus,
+select:focus {
+
+  border-color: #00c26e !important;
+
+  box-shadow: 0 0 5px rgba(0, 194, 110, 0.4);
+}
+
+/* =======================================
+   FORM CARD (buscar jugadores)
+======================================= */
+
+.card {
+  background-color: #1b1b1b;
+  border: 1px solid #2f2f2f;
+}

@@ -1,0 +1,177 @@
+
+/* =======================================
+   FONDO GENERAL
+======================================= */
+
+body {
+  background: #0f0f0f;
+  color: white;
+}
+
+/* =======================================
+   CARD PRINCIPAL DEL BUSCADOR
+======================================= */
+
+.card {
+  background-color: #1b1b1b !important;
+  border: 1px solid #2f2f2f;
+  color: white;
+  border-radius: 15px;
+}
+
+/* =======================================
+   INPUTS Y SELECTS
+======================================= */
+
+input,
+select {
+
+  background-color: #1c1c1c !important;
+
+  color: white !important;
+
+  border: 1px solid #333 !important;
+}
+
+/* placeholder visible */
+input::placeholder {
+  color: #9ca3af !important;
+  opacity: 1;
+}
+
+/* focus bonito */
+input:focus,
+select:focus {
+
+  border-color: #00c26e !important;
+
+  box-shadow: 0 0 5px rgba(0, 194, 110, 0.4);
+}
+
+/* =======================================
+   TITULOS
+======================================= */
+
+h1,
+h2,
+h3 {
+  color: #00c26e;
+}
+
+/* =======================================
+   CARD DE RESULTADOS
+======================================= */
+
+.player-card {
+
+  background: linear-gradient(
+    145deg,
+    #1b1b1b,
+    #242424
+  ) !important;
+
+  border: 1px solid #2f2f2f;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  transition: 0.3s ease;
+
+  color: white;
+}
+
+/* hover */
+.player-card:hover {
+
+  transform: translateY(-6px);
+
+  border-color: #00c26e;
+
+  box-shadow: 0 0 20px rgba(0, 194, 110, 0.25);
+}
+
+/* =======================================
+   IMAGEN
+======================================= */
+
+.player-img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+}
+
+/* =======================================
+   TEXTO
+======================================= */
+
+.player-name {
+  color: #00c26e !important;
+  font-weight: bold;
+}
+
+.player-team {
+  color: #d1d5db !important;
+}
+
+.player-info p {
+  color: #f3f4f6 !important;
+}
+
+/* fallback global */
+.player-card p,
+.player-card span {
+  color: #f3f4f6 !important;
+}
+
+/* =======================================
+   BADGES
+======================================= */
+
+.badge {
+  font-weight: 500;
+}
+
+/* =======================================
+   BOTONES
+======================================= */
+
+.btn-success {
+  background-color: #00c26e;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #00a85e;
+}
+
+/* importar */
+.btn-outline-success {
+  border-color: #00c26e;
+  color: #00c26e;
+}
+
+.btn-outline-success:hover {
+  background-color: #00c26e;
+  color: black;
+}
+
+/* =======================================
+   MENSAJES
+======================================= */
+
+.alert {
+  border-radius: 10px;
+}
+
+.alert-warning {
+  background-color: #3b2f00;
+  color: #ffd369;
+  border: none;
+}
+
+.alert-info {
+  background-color: #102a43;
+  color: #9bd3ff;
+  border: none;
+}

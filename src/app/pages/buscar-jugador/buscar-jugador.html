@@ -1,0 +1,179 @@
+<div class="container mt-5">
+
+  <!-- TITULO -->
+  <div class="text-center mb-5">
+
+    <h1 class="text-success fw-bold">
+      🔍 Buscar Jugadores API-Football
+    </h1>
+
+    <p class="text-secondary">
+      Buscar e importar jugadores externos
+    </p>
+
+  </div>
+
+  <!-- FORMULARIO -->
+  <div class="card bg-dark shadow-lg p-4 mb-4">
+
+    <div class="row g-3">
+
+      <!-- NOMBRE -->
+      <div class="col-md-4">
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Nombre jugador"
+          [(ngModel)]="nombre"
+          (input)="mensaje=''">
+
+      </div>
+
+      <!-- LIGA -->
+      <div class="col-md-4">
+
+        <select
+          class="form-select"
+          [(ngModel)]="liga"
+          (change)="mensaje=''">
+
+          <option value="39">Premier League</option>
+          <option value="140">LaLiga</option>
+          <option value="61">Ligue 1</option>
+          <option value="78">Bundesliga</option>
+          <option value="135">Serie A</option>
+
+        </select>
+
+      </div>
+
+      <!-- TEMPORADA -->
+      <div class="col-md-2">
+
+        <select
+          class="form-select"
+          [(ngModel)]="season"
+          (change)="mensaje=''">
+
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+
+        </select>
+
+      </div>
+
+      <!-- BOTÓN -->
+      <div class="col-md-2">
+
+        <button
+          class="btn btn-success w-100"
+          (click)="buscarJugador()"
+          [disabled]="cargando">
+
+          {{ cargando ? 'Buscando...' : 'Buscar' }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+<!-- LOADING SOLO SI NO HAY RESULTADOS -->
+<div *ngIf="cargando"
+     class="alert alert-warning text-center">
+
+  ⏳ Buscando jugadores...
+
+</div>
+
+  <!-- MENSAJE -->
+  <div
+    *ngIf="mensaje"
+    class="alert alert-info text-center">
+
+    {{ mensaje }}
+
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="row g-4">
+
+    <div
+      class="col-lg-4 col-md-6"
+      *ngFor="let jugador of resultados">
+
+      <div class="card player-card shadow-lg h-100">
+
+        <!-- IMAGEN -->
+        <img
+          [src]="jugador.player.photo"
+          class="player-img"
+          alt="Jugador">
+
+        <!-- INFO -->
+        <div class="card-body">
+
+          <h3 class="player-name">
+
+            {{ jugador.player.name }}
+
+          </h3>
+
+          <p class="player-team">
+
+            {{ jugador.statistics[0]?.team?.name }}
+
+          </p>
+
+          <div class="player-info">
+
+            <span class="badge bg-success">
+
+              {{ jugador.statistics[0]?.games?.position }}
+
+            </span>
+
+            <span class="badge bg-primary">
+
+              {{ jugador.statistics[0]?.league?.name }}
+
+            </span>
+
+          </div>
+
+          <hr>
+
+          <p>
+            🌍 {{ jugador.player.nationality }}
+          </p>
+
+          <p>
+            🎂 {{ jugador.player.age }} años
+          </p>
+
+          <!-- IMPORTAR -->
+          <button
+            class="btn btn-outline-success w-100 mt-3"
+            (click)="importarJugador(jugador)">
+
+            Importar
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
