@@ -1,0 +1,81 @@
+<div class="container mt-5">
+
+  <div class="row justify-content-center">
+
+    <div class="col-md-5">
+
+      <div class="card bg-dark text-light shadow">
+
+        <div class="card-body p-4">
+
+          <h2 class="text-center text-success mb-4">
+
+            Iniciar Sesión
+
+          </h2>
+
+          <!-- Usuario -->
+
+          <div class="mb-3">
+
+            <label class="form-label">
+
+              Usuario
+
+            </label>
+
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="username">
+
+          </div>
+
+          <!-- Botón -->
+
+          <div class="d-grid">
+
+            <button
+              class="btn btn-success"
+              (click)="iniciarSesion()">
+
+              Entrar
+
+            </button>
+
+          </div>
+
+          <!-- Mensaje -->
+
+          <div
+            *ngIf="mensaje"
+            class="alert alert-danger mt-3">
+
+            {{ mensaje }}
+
+          </div>
+
+          <!-- Ayuda -->
+
+          <div class="mt-4 text-center text-secondary">
+
+            <small>
+
+              Usa:
+              <strong>admin</strong>
+              o
+              <strong>marta</strong>
+
+            </small>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

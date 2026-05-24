@@ -1,128 +1,52 @@
 import { Injectable } from '@angular/core';
-
-import { HttpClient } from '@angular/common/http';
-
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class ApiFootballService {
 
-  // =====================================================
-  // URL BACKEND SPRING
-  // =====================================================
+  private baseUrl = 'http://localhost:8080/api';
 
-  private apiUrl =
-    'http://localhost:8080/api/jugadores';
+  constructor(private http: HttpClient) {}
 
-  // =====================================================
-  // URL API FOOTBALL
-  // =====================================================
+  // =========================
+  // BUSCAR + GUARDAR
+  // =========================
+  buscarJugador(nombre: string, temporada: number, liga: number) {
 
-  private apiFootballUrl =
-    'http://localhost:8080/api/football';
+    let params = new HttpParams()
+      .set('nombre', nombre)
+      .set('temporada', temporada)
+      .set('liga', liga);
 
-  // =====================================================
-  // CONSTRUCTOR
-  // =====================================================
-
-  constructor(
-    private http: HttpClient
-  ) { }
-
-  // =====================================================
-  // OBTENER TODOS LOS JUGADORES
-  // =====================================================
-
-  obtenerJugadores(): Observable<any[]> {
-
-    return this.http.get<any[]>(
-      this.apiUrl
+    return this.http.get<any>(
+      `${this.baseUrl}/external/buscar`,
+      { params }
     );
-
   }
 
-  // =====================================================
-  // CREAR JUGADOR
-  // =====================================================
-
-  crearJugador(
-    jugador: any
-  ): Observable<any> {
-
-    return this.http.post(
-      this.apiUrl,
-      jugador
+  // =========================
+  // IMPORTAR
+  // =========================
+  importarJugador() {
+    return this.http.get<any>(
+      `${this.baseUrl}/external/importar`
     );
-
   }
 
-  // =====================================================
-  // ACTUALIZAR JUGADOR
-  // =====================================================
-
-  actualizarJugador(
-    id: string,
-    jugador: any
-  ): Observable<any> {
-
-    return this.http.put(
-      `${this.apiUrl}/${id}`,
-      jugador
-    );
-
+  // =========================
+  // CRUD 
+  // =========================
+  obtenerJugadores() {
+    return this.http.get<any>(`${this.baseUrl}/jugadores`);
   }
 
-  // =====================================================
-  // ELIMINAR JUGADOR
-  // =====================================================
-
-  eliminarJugador(
-    id: string
-  ): Observable<any> {
-
-    return this.http.delete(
-      `${this.apiUrl}/${id}`
-    );
-
+  actualizarJugador(id: string, jugador: any) {
+    return this.http.put<any>(`${this.baseUrl}/jugadores/${id}`, jugador);
   }
 
-  // =====================================================
-  // BUSCAR JUGADOR EN API-FOOTBALL
-  // =====================================================
-
-  buscarJugador(
-    nombre: string,
-    equipo: string
-  ): Observable<any> {
-
-    return this.http.get(
-      `${this.apiFootballUrl}/buscar`,
-      {
-        params: {
-          nombre,
-          equipo
-        }
-      }
-    );
-
+  eliminarJugador(id: string) {
+    return this.http.delete<any>(`${this.baseUrl}/jugadores/${id}`);
   }
-
-  // =====================================================
-  // IMPORTAR JUGADOR
-  // =====================================================
-
-  importarJugador(
-    jugador: any
-  ): Observable<any> {
-
-    return this.http.post(
-      `${this.apiUrl}/importar`,
-      jugador
-    );
-
-  }
-
 }

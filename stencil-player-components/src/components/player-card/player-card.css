@@ -1,0 +1,67 @@
+.card {
+
+  background: #1e1e1e;
+
+  border: 1px solid #333;
+
+  border-radius: 15px;
+
+  padding: 1rem;
+
+  width: 220px;
+
+  text-align: center;
+
+  color: white;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+
+}
+
+img {
+
+  width: 100%;
+
+  height: 220px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  margin-bottom: 1rem;
+
+}
+
+h2 {
+
+  color: #00ff88;
+
+  font-size: 1.2rem;
+
+  margin-bottom: 0.5rem;
+
+}
+
+p {
+
+  color: #cccccc;
+
+  margin-bottom: 0.5rem;
+
+}
+
+span {
+
+  background: #00ff88;
+
+  color: black;
+
+  padding: 0.3rem 0.7rem;
+
+  border-radius: 20px;
+
+  font-size: 0.8rem;
+
+  font-weight: bold;
+
+}

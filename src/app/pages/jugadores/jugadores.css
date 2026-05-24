@@ -165,3 +165,39 @@ select:focus {
   background-color: #1b1b1b;
   border: 1px solid #2f2f2f;
 }
+textarea.form-control {
+
+  background-color: #1e1e1e;
+
+  color: white;
+
+  border: 1px solid #555;
+
+}
+
+textarea.form-control::placeholder {
+
+  color: #bdbdbd;
+
+}
+.form-control {
+
+  background-color: #1e1e1e;
+
+  color: white;
+
+  border: 1px solid #555;
+
+}
+
+.form-control::placeholder {
+
+  color: #bdbdbd;
+
+}
+.bg-dark,
+.bg-dark * {
+
+  color: white !important;
+
+}

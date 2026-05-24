@@ -1,0 +1,18 @@
+body {
+  background-color: #121212;
+}
+
+.dashboard-card {
+  background-color: #1e1e1e;
+  border: 1px solid #2e2e2e;
+  border-radius: 15px;
+  transition: transform 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-3px);
+}
+
+.card-body {
+  padding: 2rem;
+}

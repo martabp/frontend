@@ -2,9 +2,17 @@
 
   <div class="container-fluid">
 
-    <a class="navbar-brand fw-bold text-success" href="#">
+    <!-- LOGO -->
+
+    <a
+      class="navbar-brand fw-bold text-success"
+      routerLink="/">
+
       ⚽ Football App
+
     </a>
+
+    <!-- BOTÓN MÓVIL -->
 
     <button
       class="navbar-toggler"
@@ -16,38 +24,104 @@
 
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <!-- NAVBAR -->
+
+    <div
+      class="collapse navbar-collapse"
+      id="navbarNav">
 
       <ul class="navbar-nav ms-auto">
 
+        <!-- INICIO -->
+
         <li class="nav-item">
-          <a class="nav-link active" href="#">
+
+          <a
+            class="nav-link"
+            routerLink="/">
+
             Inicio
+
           </a>
+
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/jugadores">
-            Jugadores
-          </a>
-        </li>
+        <!-- BUSCAR API -->
 
         <li class="nav-item">
-          <a class="nav-link" href="#">
-            Equipos
+
+          <a
+            class="nav-link"
+            routerLink="/buscar-jugador">
+
+            Buscar API
+
           </a>
+
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="#">
-            Noticias
+        <!-- LOGIN -->
+
+        <li
+          class="nav-item"
+          *ngIf="!authService.estaLogueado()">
+
+          <a
+            class="nav-link text-info"
+            routerLink="/login">
+
+            Login
+
           </a>
+
         </li>
-        <li class="nav-item">
-  <a class="nav-link" routerLink="/buscar-jugador">
-    Buscar API
-  </a>
-</li>
+
+        <!-- USUARIO -->
+
+        <li
+          class="nav-item"
+          *ngIf="authService.estaLogueado()">
+
+          <span
+            class="nav-link text-success fw-bold">
+
+            👤
+            {{ authService.getUsuario() }}
+
+          </span>
+
+        </li>
+
+        <!-- ADMIN -->
+
+        <li
+          class="nav-item"
+          *ngIf="authService.esAdmin()">
+
+          <span
+            class="nav-link text-warning fw-bold">
+
+            ADMIN
+
+          </span>
+
+        </li>
+
+        <!-- LOGOUT -->
+
+        <li
+          class="nav-item"
+          *ngIf="authService.estaLogueado()">
+
+          <button
+            class="btn btn-outline-danger btn-sm ms-2"
+            (click)="logout()">
+
+            Logout
+
+          </button>
+
+        </li>
 
       </ul>
 

@@ -1,146 +1,74 @@
 import { Component } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
-
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
-
-import { ApiFootballService }
-from '../../services/api-football';
+import { ApiFootballService } from '../../services/api-football';
 
 @Component({
   selector: 'app-buscar-jugador',
-
   standalone: true,
-
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-
-  templateUrl: './buscar-jugador.html',
-
-  styleUrl: './buscar-jugador.css'
+  imports: [CommonModule, FormsModule],
+  templateUrl: './buscar-jugador.html'
 })
-
 export class BuscarJugador {
 
   nombre: string = '';
-
-  liga: string = '39';
-
-  season: string = '2024';
+  season: number = 2024;
+  liga: number = 39;
 
   resultados: any[] = [];
-
   cargando: boolean = false;
-
   mensaje: string = '';
 
-  constructor(
-    private apiFootballService: ApiFootballService,
-    private cdr: ChangeDetectorRef
-  ) {}
-
-  // ========================================
-  // BUSCAR JUGADORES
-  // ========================================
-
+  constructor(private apiFootballService: ApiFootballService) {}
 buscarJugador() {
 
+  console.log('CLICK BUSCAR OK');
+
+  this.cargando = true;
   this.resultados = [];
   this.mensaje = '';
-  this.cargando = true;
 
   this.apiFootballService.buscarJugador(
     this.nombre,
-    this.liga,
-  
+    this.season,
+    this.liga
   ).subscribe({
 
     next: (res: any) => {
+      console.log('RESPUESTA OK:', res);
 
-      const data = res?.response ?? [];
-
-      // 🔥 FORZAR RENDER INMEDIATO
+      this.resultados = res?.data ?? [];
       this.cargando = false;
-
-      this.resultados = [...data];
-
-      this.mensaje =
-        data.length === 0
-          ? '❌ No se encontraron jugadores'
-          : '';
-
-      // 💥 FORZAR DETECCIÓN DE CAMBIOS
-      this.cdr.detectChanges();
-
     },
 
-    error: () => {
-
+    error: (err) => {
+      console.log('ERROR BACKEND:', err);
       this.cargando = false;
-      this.resultados = [];
-      this.mensaje = '❌ Error en la búsqueda';
-
-      this.cdr.detectChanges();
-
     }
 
   });
 
 }
 
-  // ========================================
-  // IMPORTAR JUGADOR
-  // ========================================
+  importarJugador() {
 
-  importarJugador(jugadorApi: any) {
+    this.cargando = true;
 
-    const jugador = {
+    this.apiFootballService.importarJugador().subscribe({
 
-      nombre: jugadorApi.player.name,
+      next: () => {
 
-      equipo:
-        jugadorApi.statistics[0]?.team?.name,
+        this.cargando = false;
+        this.mensaje = 'Importación correcta';
 
-      liga:
-        jugadorApi.statistics[0]?.league?.name,
+        this.buscarJugador();
+      },
 
-      nacionalidad:
-        jugadorApi.player.nationality,
+      error: () => {
 
-      edad:
-        jugadorApi.player.age,
-
-      posicion:
-        jugadorApi.statistics[0]?.games?.position,
-
-      imagen:
-        jugadorApi.player.photo,
-
-      origen: 'API_FOOTBALL'
-
-    };
-
-    this.apiFootballService
-      .importarJugador(jugador)
-      .subscribe({
-
-        next: () => {
-
-          alert('Jugador importado correctamente');
-
-        },
-
-        error: (error) => {
-
-          console.error(error);
-
-        }
-
-      });
-
+        this.cargando = false;
+        this.mensaje = 'Error al importar';
+      }
+    });
   }
-
 }
