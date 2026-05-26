@@ -123,4 +123,15 @@ export class AuthService {
 
     return this.getRol() === 'ADMIN';
   }
+
+  registrar(usuario: any) {
+  // ============================
+  // REGISTRO USUARIO
+  // ============================
+  return this.http.post(
+    'http://localhost:8080/auth/register',
+    usuario
+  );
+
+}
 }

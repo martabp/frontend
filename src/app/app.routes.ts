@@ -4,6 +4,7 @@ import { JugadoresComponent } from './pages/jugadores/jugadores';
 import { BuscarJugador }  from './pages/buscar-jugador/buscar-jugador';
 import { DwscDashboard } from './pages/dwsc-dashboard/dwsc-dashboard';
 import { Login } from './pages/login/login';
+import { RegisterComponent } from './pages/register/register';
 
 export const routes: Routes = [
 
@@ -28,7 +29,10 @@ export const routes: Routes = [
 {
   path: 'login',
   component: Login
-}
-
+},
+{
+  path: 'register',
+  component: RegisterComponent
+},
 
 ];

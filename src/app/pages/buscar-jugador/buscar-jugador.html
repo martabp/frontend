@@ -1,148 +1,148 @@
-<div class="container mt-5">
+<div class="container mt-4">
 
-  <!-- TITULO -->
-  <div class="text-center mb-5">
+  <!-- TÍTULO -->
+  <h1 class="text-center text-success mb-4">
+    Buscar Jugadores API
+  </h1>
 
-    <h1 class="text-success fw-bold">
-      🔍 Buscar Jugadores API-Football
-    </h1>
+  <!-- BUSCADOR -->
+  <div class="row mb-4">
 
-    <p class="text-secondary">
-      Buscar e importar jugadores externos
-    </p>
+    <!-- NOMBRE -->
+    <div class="col-md-4">
 
-  </div>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="nombre"
+        placeholder="Nombre del jugador">
 
-  <!-- FORMULARIO -->
-  <div class="card bg-dark shadow-lg p-4 mb-4">
+    </div>
 
-    <div class="row g-3">
+    <!-- TEMPORADA -->
+    <div class="col-md-3">
 
-      <!-- NOMBRE -->
-      <div class="col-md-4">
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="season"
+        placeholder="Temporada">
 
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Nombre jugador"
-          [(ngModel)]="nombre">
+    </div>
 
-      </div>
+    <!-- LIGA -->
+<div class="col-md-3">
 
-      <!-- LIGA -->
-      <div class="col-md-4">
+  <select
+    class="form-select"
+    [(ngModel)]="liga">
 
-        <select class="form-select" [(ngModel)]="liga">
+    <option [value]="39">
+      Premier League
+    </option>
 
-          <option [value]="39">Premier League</option>
-          <option [value]="140">LaLiga</option>
-          <option [value]="61">Ligue 1</option>
-          <option [value]="78">Bundesliga</option>
-          <option [value]="135">Serie A</option>
+    <option [value]="140">
+      LaLiga
+    </option>
 
-        </select>
+    <option [value]="135">
+      Serie A
+    </option>
 
-      </div>
+    <option [value]="78">
+      Bundesliga
+    </option>
 
-      <!-- TEMPORADA -->
-      <div class="col-md-2">
+    <option [value]="61">
+      Ligue 1
+    </option>
 
-        <select class="form-select" [(ngModel)]="season">
+  </select>
 
-          <option [value]="2026">2026</option>
-          <option [value]="2025">2025</option>
-          <option [value]="2024">2024</option>
-          <option [value]="2023">2023</option>
-          <option [value]="2022">2022</option>
+</div>
 
-        </select>
+    <!-- BOTÓN -->
+    <div class="col-md-2">
 
-      </div>
+      <button
+        class="btn btn-success w-100"
+        (click)="buscarJugador()">
 
-      <!-- BOTÓN BUSCAR -->
-      <div class="col-md-2">
+        Buscar
 
-        <button
-          class="btn btn-success w-100"
-          (click)="buscarJugador()"
-          [disabled]="cargando">
-
-          {{ cargando ? 'Buscando...' : 'Buscar' }}
-
-        </button>
-
-      </div>
+      </button>
 
     </div>
 
   </div>
 
   <!-- LOADING -->
-  <div *ngIf="cargando" class="alert alert-warning text-center">
-    ⏳ Buscando jugadores...
+  <div
+    *ngIf="cargando"
+    class="text-center mb-4">
+
+    <div class="spinner-border text-success"></div>
+
   </div>
 
   <!-- MENSAJE -->
-  <div *ngIf="mensaje" class="alert alert-info text-center">
+  <div
+    *ngIf="mensaje"
+    class="alert alert-info">
+
     {{ mensaje }}
+
   </div>
 
-  <!-- RESULTADOS -->
-  <div class="row g-4">
+ <!-- RESULTADOS -->
+<div class="row">
 
-    <div class="col-lg-4 col-md-6"
-         *ngFor="let jugador of resultados">
+  <div
+    class="col-md-4 mb-4"
+    *ngFor="let jugador of resultados">
 
-      <div class="card player-card shadow-lg h-100">
+    <div
+      class="card bg-dark text-white border-success h-100 text-center p-3">
 
-        <!-- IMAGEN -->
-        <img
-          [src]="jugador?.player?.photo || 'https://ui-avatars.com/api/?name=' + (jugador?.player?.name || 'Jugador')"
-          class="player-img">
+      <!-- FOTO -->
+      <img
+        [src]="jugador.imagen"
+        class="rounded-circle mx-auto mb-3"
+        alt="Jugador"
+        style="
+          width: 120px;
+          height: 120px;
+          object-fit: cover;
+        ">
 
-        <div class="card-body">
+      <!-- NOMBRE -->
+      <h4 class="text-success">
 
-          <!-- NOMBRE -->
-          <h3>
-            {{ jugador?.player?.name || 'Sin nombre' }}
-          </h3>
+        {{ jugador.nombre }}
 
-          <!-- EQUIPO -->
-          <p>
-            {{ jugador?.statistics?.[0]?.team?.name || 'Sin equipo' }}
-          </p>
+      </h4>
 
-          <!-- BADGES -->
-          <span class="badge bg-success">
-            {{ jugador?.statistics?.[0]?.games?.position || 'N/A' }}
-          </span>
+      <!-- EQUIPO -->
+      <p>
 
-          <span class="badge bg-primary">
-            {{ jugador?.statistics?.[0]?.league?.name || 'N/A' }}
-          </span>
+        <strong>Equipo:</strong>
 
-          <hr>
+        {{ jugador.equipo }}
 
-          <!-- INFO EXTRA -->
-          <p>🌍 {{ jugador?.player?.nationality || 'N/A' }}</p>
-          <p>🎂 {{ jugador?.player?.age || 'N/A' }} años</p>
+      </p>
 
-          <!-- IMPORTAR -->
-          <button
-            class="btn btn-outline-success w-100 mt-3"
-            (click)="importarJugador()"
-            [disabled]="cargando">
+      <!-- IMPORTAR -->
+      <button
+        class="btn btn-success mt-auto"
+        (click)="importarJugador(jugador)">
 
-            Importar búsqueda
+        Importar
 
-          </button>
-
-        </div>
-
-      </div>
+      </button>
 
     </div>
 
   </div>
 
+</div>
 </div>

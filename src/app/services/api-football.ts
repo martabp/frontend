@@ -1,52 +1,146 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+
+import { BackendService } from './backend';
+
+import {
+  HttpClient,
+  HttpParams
+} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class ApiFootballService {
 
-  private baseUrl = 'http://localhost:8080/api';
+  constructor(
 
-  constructor(private http: HttpClient) {}
+    private http: HttpClient,
 
-  // =========================
-  // BUSCAR + GUARDAR
-  // =========================
-  buscarJugador(nombre: string, temporada: number, liga: number) {
+    private backendService: BackendService
+
+  ) {}
+
+  // ==========================================
+  // OBTENER URL BASE
+  // ==========================================
+
+  private getBaseUrl(): string {
+
+    return this.backendService
+      .getBaseUrl();
+
+  }
+
+  // ==========================================
+  // BUSCAR EN API EXTERNA
+  // ==========================================
+
+  buscarJugador(
+    nombre: string,
+    temporada: number,
+    liga: number
+  ) {
 
     let params = new HttpParams()
+
       .set('nombre', nombre)
-      .set('temporada', temporada)
-      .set('liga', liga);
+
+      .set(
+        'temporada',
+        temporada
+      )
+
+      .set(
+        'liga',
+        liga
+      );
 
     return this.http.get<any>(
-      `${this.baseUrl}/external/buscar`,
+
+      `${this.getBaseUrl()}/external/buscar`,
+
       { params }
+
     );
+
   }
 
-  // =========================
-  // IMPORTAR
-  // =========================
+  // ==========================================
+  // IMPORTAR JUGADOR
+  // ==========================================
+
   importarJugador() {
+
     return this.http.get<any>(
-      `${this.baseUrl}/external/importar`
+
+      `${this.getBaseUrl()}/external/importar`
+
     );
+
   }
 
-  // =========================
-  // CRUD 
-  // =========================
+  // ==========================================
+  // OBTENER JUGADORES
+  // ==========================================
+
   obtenerJugadores() {
-    return this.http.get<any>(`${this.baseUrl}/jugadores`);
+
+    return this.http.get<any>(
+
+      `${this.getBaseUrl()}/jugadores`
+
+    );
+
   }
 
-  actualizarJugador(id: string, jugador: any) {
-    return this.http.put<any>(`${this.baseUrl}/jugadores/${id}`, jugador);
+  // ==========================================
+  // CREAR JUGADOR
+  // ==========================================
+
+  crearJugador(jugador: any) {
+
+    return this.http.post<any>(
+
+      `${this.getBaseUrl()}/jugadores`,
+
+      jugador
+
+    );
+
   }
+
+  // ==========================================
+  // ACTUALIZAR JUGADOR
+  // ==========================================
+
+  actualizarJugador(
+    id: string,
+    jugador: any
+  ) {
+
+    return this.http.put<any>(
+
+      `${this.getBaseUrl()}/jugadores/${id}`,
+
+      jugador
+
+    );
+
+  }
+
+  // ==========================================
+  // ELIMINAR JUGADOR
+  // ==========================================
 
   eliminarJugador(id: string) {
-    return this.http.delete<any>(`${this.baseUrl}/jugadores/${id}`);
+
+    return this.http.delete<any>(
+
+      `${this.getBaseUrl()}/jugadores/${id}`
+
+    );
+
   }
+
 }

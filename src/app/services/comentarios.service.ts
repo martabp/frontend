@@ -11,7 +11,7 @@ import {
 export class ComentariosService {
 
   private apiUrl =
-    'http://localhost:8082/api/comentarios';
+    'http://localhost:3000/api/comentarios';
 
   constructor(
     private http: HttpClient

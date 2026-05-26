@@ -10,14 +10,35 @@ import { Observable } from 'rxjs';
 
 export class JugadoresService {
 
-  private apiUrl = 'http://localhost:8080/api/jugadores';
+  private apiUrl =
+    'http://localhost:8080/api/jugadores';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
   obtenerJugadores(): Observable<any> {
 
-    return this.http.get<any>(this.apiUrl);
+    return this.http.get<any>(
+      this.apiUrl
+    );
 
   }
+
+ crearJugador(jugador: any): Observable<any> {
+
+  return this.http.post<any>(
+
+    this.apiUrl,
+
+    jugador,
+
+    {
+      responseType: 'text' as 'json'
+    }
+
+  );
+
+}
 
 }

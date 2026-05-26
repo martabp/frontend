@@ -6,10 +6,10 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { ApiFootballService } from '../../services/api-football';
 import { ComentariosService } from '../../services/comentarios.service';
 import { AuthService } from '../../services/auth.service';
+import { BuscarJugador } from '../buscar-jugador/buscar-jugador';
 
 @Component({
   selector: 'app-jugadores',
@@ -17,20 +17,23 @@ import { AuthService } from '../../services/auth.service';
 
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    BuscarJugador
   ],
 
   templateUrl: './jugadores.html',
   styleUrls: ['./jugadores.css']
 })
 
-export class JugadoresComponent implements OnInit {
+export class JugadoresComponent
+implements OnInit {
 
   // ==========================================
   // LISTAS
   // ==========================================
 
   jugadores: any[] = [];
+
   jugadoresOriginales: any[] = [];
 
   // ==========================================
@@ -38,7 +41,9 @@ export class JugadoresComponent implements OnInit {
   // ==========================================
 
   busquedaNombre = '';
+
   busquedaEquipo = '';
+
   busquedaFecha = '';
 
   // ==========================================
@@ -48,28 +53,69 @@ export class JugadoresComponent implements OnInit {
   jugadorEditando: any = null;
 
   // ==========================================
+  // NUEVO JUGADOR
+  // ==========================================
+
+  nuevoJugador = {
+
+    nombre: '',
+
+    equipo: '',
+
+    liga: '',
+
+    posicion: '',
+
+    edad: null,
+
+    imagen: ''
+
+  };
+
+  // ==========================================
   // MENSAJES
   // ==========================================
 
   mensajeExito = '';
+
   mensajeError = '';
 
   // ==========================================
-// COMENTARIOS
+  // COMENTARIOS
+  // ==========================================
+
+  comentarios: any = {};
+  nuevoComentario: any = {};
+  valoracionComentario: any = {};
+  mostrarComentarios: any = {};
+// ==========================================
+// VISIBILIDAD CARDS
 // ==========================================
 
-comentarios: any = {};
-nuevoComentario: any = {};
-mostrarComentarios: any = {};
+mostrarGestion = true;
+mostrarFormularioJugador = true;
+
+mostrarListaJugadores = false;
+
+mostrarImportarApi = true;
   // ==========================================
   // CONSTRUCTOR
   // ==========================================
 
   constructor(
-    private apiFootballService: ApiFootballService,
-    private cdRef: ChangeDetectorRef,
-    private comentariosService: ComentariosService,
-     public authService: AuthService
+
+    private apiFootballService:
+    ApiFootballService,
+
+    private cdRef:
+    ChangeDetectorRef,
+
+    private comentariosService:
+    ComentariosService,
+
+    public authService:
+    AuthService
+
   ) {}
 
   // ==========================================
@@ -88,15 +134,20 @@ mostrarComentarios: any = {};
 
   obtenerJugadores(): void {
 
-    this.apiFootballService.obtenerJugadores()
+    this.apiFootballService
+      .obtenerJugadores()
+
       .subscribe({
 
         next: (respuesta: any) => {
 
-          this.jugadores = [...respuesta.data];
+          this.jugadores =
+            [...respuesta.data];
 
           this.jugadoresOriginales =
             [...respuesta.data];
+
+          this.mensajeError = '';
 
           this.cdRef.detectChanges();
 
@@ -135,6 +186,7 @@ mostrarComentarios: any = {};
         jugador => {
 
           const coincideNombre =
+
             jugador.nombre
               .toLowerCase()
               .includes(nombre);
@@ -159,14 +211,112 @@ mostrarComentarios: any = {};
               ?.includes(fecha);
 
           return (
+
             coincideNombre &&
             coincideEquipo &&
             coincideFecha
+
           );
 
         }
 
       );
+
+  }
+
+  // ==========================================
+  // AGREGAR JUGADOR
+  // ==========================================
+
+  agregarJugador(): void {
+
+    this.mensajeExito = '';
+
+    this.mensajeError = '';
+
+    /*
+     * Validación mínima
+     */
+    if (!this.nuevoJugador.nombre) {
+
+      this.mensajeError =
+        'El nombre del jugador es obligatorio';
+
+      return;
+    }
+
+    this.apiFootballService
+      .crearJugador(this.nuevoJugador)
+
+      .subscribe({
+
+        next: () => {
+
+          this.mensajeExito =
+            'Jugador insertado correctamente';
+
+          this.mensajeError = '';
+
+          /*
+           * Limpiar formulario
+           */
+          this.nuevoJugador = {
+
+            nombre: '',
+
+            equipo: '',
+
+            liga: '',
+
+            posicion: '',
+
+            edad: null,
+
+            imagen: ''
+
+          };
+
+          /*
+           * Refrescar lista
+           */
+          this.obtenerJugadores();
+
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+          if (error.status === 400) {
+
+            this.mensajeError =
+              'Datos inválidos o incompletos';
+
+          } else if (error.status === 401) {
+
+            this.mensajeError =
+              'Debe iniciar sesión';
+
+          } else if (error.status === 403) {
+
+            this.mensajeError =
+              'No tiene permisos';
+
+          } else if (error.status === 0) {
+
+            this.mensajeError =
+              'No se puede conectar con el servidor';
+
+          } else {
+
+            this.mensajeError =
+              'Error al insertar jugador';
+
+          }
+
+        }
+
+      });
 
   }
 
@@ -188,29 +338,40 @@ mostrarComentarios: any = {};
 
   actualizarJugador(): void {
 
-    this.apiFootballService.actualizarJugador(
-      this.jugadorEditando.id,
-      this.jugadorEditando
-    ).subscribe({
+    this.apiFootballService
+      .actualizarJugador(
 
-      next: () => {
+        this.jugadorEditando.id,
 
-        this.jugadorEditando = null;
+        this.jugadorEditando
 
-        this.obtenerJugadores();
+      )
 
-      },
+      .subscribe({
 
-      error: (error) => {
+        next: () => {
 
-        console.error(error);
+          this.jugadorEditando = null;
 
-        this.mensajeError =
-          'Error al actualizar jugador';
+          this.mensajeExito =
+            'Jugador actualizado correctamente';
 
-      }
+          this.mensajeError = '';
 
-    });
+          this.obtenerJugadores();
+
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+          this.mensajeError =
+            'Error al actualizar jugador';
+
+        }
+
+      });
 
   }
 
@@ -229,16 +390,27 @@ mostrarComentarios: any = {};
   // ==========================================
 
   eliminarJugador(id: string): void {
-      const confirmacion = confirm('¿Desea eliminar este jugador?');
 
-  if (!confirmacion) {
-    return; // ❌ cancela la acción
-  }
+    const confirmacion =
+      confirm(
+        '¿Desea eliminar este jugador?'
+      );
 
-    this.apiFootballService.eliminarJugador(id)
+    if (!confirmacion) {
+      return;
+    }
+
+    this.apiFootballService
+      .eliminarJugador(id)
+
       .subscribe({
 
         next: () => {
+
+          this.mensajeExito =
+            'Jugador eliminado correctamente';
+
+          this.mensajeError = '';
 
           this.obtenerJugadores();
 
@@ -249,161 +421,266 @@ mostrarComentarios: any = {};
           console.error(error);
 
           this.mensajeError =
-          'Error al eliminar jugador';
+            'Error al eliminar jugador';
 
         }
+
       });
+
   }
 
   // ==========================================
-// MOSTRAR / OCULTAR COMENTARIOS
-// ==========================================
+  // MOSTRAR / OCULTAR COMENTARIOS
+  // ==========================================
 
-toggleComentarios(
-  jugadorId: string
-): void {
+  toggleComentarios(
+    jugadorId: string
+  ): void {
 
-  // Si estaba abierto → cerrar
-  if (this.mostrarComentarios[jugadorId]) {
+    if (
+      this.mostrarComentarios[jugadorId]
+    ) {
 
-    this.mostrarComentarios[jugadorId] = false;
+      this.mostrarComentarios[
+        jugadorId
+      ] = false;
 
-    return;
-  }
+      return;
 
-  // Abrir
-  this.mostrarComentarios[jugadorId] = true;
-
-  // Cargar comentarios
-  this.cargarComentarios(jugadorId);
-
-}
-
-// ==========================================
-// CARGAR COMENTARIOS
-// ==========================================
-
-cargarComentarios(
-  jugadorId: string
-): void {
-
-  this.comentariosService
-    .obtenerComentarios(jugadorId)
-
-    .subscribe({
-
-      next: (respuesta: any) => {
-
-        this.comentarios[jugadorId] =
-          [...respuesta];
-
-        this.cdRef.detectChanges();
-
-      },
-
-      error: (error) => {
-
-        console.error(error);
-      }
-    });
-}
-// ==========================================
-// CREAR COMENTARIO
-// ==========================================
-crearComentario(jugadorId: string): void {
-
-  const texto = this.nuevoComentario[jugadorId];
-
-  if (!texto || texto.trim() === '') {
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-
-    (position) => {
-
-      const comentario = {
-
-        jugadorId: jugadorId,
-
-        autor: this.authService.getUsuario(),
-
-        contenido: texto,
-
-        geolocalizacion: {
-
-          latitud: position.coords.latitude,
-
-          longitud: position.coords.longitude
-        }
-      };
-
-      this.comentariosService
-        .crearComentario(comentario)
-
-        .subscribe({
-
-          next: () => {
-
-            this.nuevoComentario[jugadorId] = '';
-
-            this.cargarComentarios(jugadorId);
-          },
-
-          error: (error) => {
-
-            console.error(error);
-
-            this.mensajeError =
-              'Error al crear comentario';
-          }
-        });
-
-    },
-
-    (error) => {
-
-      console.error(error);
-
-      this.mensajeError =
-        'No se pudo obtener la geolocalización';
     }
-  );
-}
 
-// ==========================================
-// ELIMINAR COMENTARIO
-// ==========================================
-eliminarComentario(
-  comentarioId: string,
-  jugadorId: string
-): void {
+    this.mostrarComentarios[
+      jugadorId
+    ] = true;
 
-  const confirmar =
-    confirm('¿Eliminar comentario?');
+    this.cargarComentarios(jugadorId);
 
-  if (!confirmar) {
-    return;
   }
 
-  this.comentariosService
-    .eliminarComentario(comentarioId)
+  // ==========================================
+  // CARGAR COMENTARIOS
+  // ==========================================
 
-    .subscribe({
+  cargarComentarios(
+    jugadorId: string
+  ): void {
 
-      next: () => {
+    this.comentariosService
+      .obtenerComentarios(jugadorId)
 
-        this.cargarComentarios(jugadorId);
-      },
+      .subscribe({
 
-      error: (error) => {
+        next: (respuesta: any) => {
 
-        console.error(error);
+          this.comentarios[
+            jugadorId
+          ] = [...respuesta];
 
-        this.mensajeError =
-          'Error al eliminar comentario';
-      }
-    });
+          this.cdRef.detectChanges();
+
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+        }
+
+      });
+
+  }
+
+  // ==========================================
+  // CREAR COMENTARIO
+  // ==========================================
+
+  crearComentario(
+    jugadorId: string
+  ): void {
+
+    const texto =
+      this.nuevoComentario[jugadorId];
+
+    if (
+      !texto ||
+      texto.trim() === ''
+    ) {
+
+      return;
+
+    }
+
+    navigator.geolocation
+      .getCurrentPosition(
+
+        (position) => {
+
+          const comentario = {
+
+            jugadorId: jugadorId,
+
+            autor:
+              this.authService
+                .getUsuario(),
+
+            contenido: texto,
+            valoracion: this.valoracionComentario[jugadorId],
+            geolocalizacion: {
+
+              latitud:
+                position.coords.latitude,
+
+              longitud:
+                position.coords.longitude
+
+            }
+
+          };
+
+          this.comentariosService
+            .crearComentario(comentario)
+
+            .subscribe({
+
+              next: () => {
+
+                this.mensajeExito =
+                  'Comentario añadido correctamente';
+
+                this.mensajeError = '';
+
+                this.nuevoComentario[
+                  jugadorId
+                ] = '';
+
+                this.cargarComentarios(
+                  jugadorId
+                );
+
+              },
+
+              error: (error) => {
+
+                console.error(error);
+
+                this.mensajeError =
+                  'Error al crear comentario';
+
+              }
+
+            });
+
+        },
+
+        (error) => {
+
+          console.error(error);
+
+          this.mensajeError =
+            'No se pudo obtener la geolocalización';
+
+        }
+
+      );
+
+  }
+
+  // ==========================================
+  // ELIMINAR COMENTARIO
+  // ==========================================
+
+  eliminarComentario(
+
+    comentarioId: string,
+
+    jugadorId: string
+
+  ): void {
+
+    const confirmar =
+      confirm(
+        '¿Eliminar comentario?'
+      );
+
+    if (!confirmar) {
+      return;
+    }
+
+    this.comentariosService
+      .eliminarComentario(comentarioId)
+
+      .subscribe({
+
+        next: () => {
+
+          this.mensajeExito =
+            'Comentario eliminado correctamente';
+
+          this.mensajeError = '';
+
+          this.cargarComentarios(
+            jugadorId
+          );
+
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+          this.mensajeError =
+            'Error al eliminar comentario';
+
+        }
+
+      });
+
+  }
+  // ==========================================
+  // OBTENER VALORACIONES
+  // ==========================================
+obtenerMediaValoraciones(
+  jugadorId: string
+): string {
+
+  const lista =
+    this.comentarios[jugadorId];
+
+  if (!lista || lista.length === 0) {
+
+    return '-';
+
+  }
+
+  const valoraciones =
+    lista
+      .map((c: any) => c.valoracion)
+      .filter((v: any) =>
+        v !== null &&
+        v !== undefined
+      );
+
+  if (valoraciones.length === 0) {
+
+    return '-';
+
+  }
+
+  const suma =
+    valoraciones.reduce(
+
+      (a: number, b: number) => a + b,
+
+      0
+
+    );
+
+  const media =
+    suma / valoraciones.length;
+
+  return media.toFixed(1);
+
 }
+
 
 }
