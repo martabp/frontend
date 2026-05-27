@@ -1,39 +1,63 @@
 import { Injectable } from '@angular/core';
 
 import {
-  HttpClient,
-  HttpParams
+
+  HttpClient
+
 } from '@angular/common/http';
 
-import { Observable, tap } from 'rxjs';
+import {
+
+  Observable,
+  tap
+
+} from 'rxjs';
+
+import { BackendService }
+from './backend';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
 
-  // URL backend
-  private apiUrl =
-    'http://localhost:8080/auth';
-
   constructor(
-    private http: HttpClient
+
+    private http: HttpClient,
+
+    private backendService:
+      BackendService
+
   ) {}
+
+  /*
+   * URL dinámica backend
+   */
+  private get apiUrl(): string {
+
+    return `${this.backendService
+      .getBaseUrl()}/auth`;
+
+  }
 
   // ============================
   // LOGIN
   // ============================
 
-  login(username: string): Observable<any> {
+  login(
+    email: string,
+    password: string
+  ): Observable<any> {
 
-    const params =
-      new HttpParams()
-        .set('username', username);
+    return this.http.post<any>(
 
-    return this.http.post(
       `${this.apiUrl}/login`,
-      {},
-      { params }
+
+      {
+        email,
+        password
+      }
 
     ).pipe(
 
@@ -41,23 +65,35 @@ export class AuthService {
 
         // Guardar token
         localStorage.setItem(
+
           'token',
+
           response.token
+
         );
 
         // Guardar rol
         localStorage.setItem(
+
           'rol',
+
           response.rol
+
         );
 
         // Guardar usuario
         localStorage.setItem(
+
           'usuario',
-          username
+
+          email
+
         );
+
       })
+
     );
+
   }
 
   // ============================
@@ -66,11 +102,18 @@ export class AuthService {
 
   logout(): void {
 
-    localStorage.removeItem('token');
+    localStorage.removeItem(
+      'token'
+    );
 
-    localStorage.removeItem('rol');
+    localStorage.removeItem(
+      'rol'
+    );
 
-    localStorage.removeItem('usuario');
+    localStorage.removeItem(
+      'usuario'
+    );
+
   }
 
   // ============================
@@ -82,6 +125,7 @@ export class AuthService {
     return localStorage.getItem(
       'token'
     );
+
   }
 
   // ============================
@@ -93,6 +137,7 @@ export class AuthService {
     return localStorage.getItem(
       'rol'
     );
+
   }
 
   // ============================
@@ -104,6 +149,7 @@ export class AuthService {
     return localStorage.getItem(
       'usuario'
     );
+
   }
 
   // ============================
@@ -113,6 +159,7 @@ export class AuthService {
   estaLogueado(): boolean {
 
     return !!this.getToken();
+
   }
 
   // ============================
@@ -122,16 +169,29 @@ export class AuthService {
   esAdmin(): boolean {
 
     return this.getRol() === 'ADMIN';
+
   }
 
-  registrar(usuario: any) {
   // ============================
-  // REGISTRO USUARIO
+  // REGISTRO
   // ============================
-  return this.http.post(
-    'http://localhost:8080/auth/register',
-    usuario
-  );
 
-}
+  registrar(
+    usuario: any
+  ) {
+
+    return this.http.post(
+
+      `${this.apiUrl}/register`,
+
+      usuario,
+
+      {
+        responseType: 'text'
+      }
+
+    );
+
+  }
+
 }

@@ -68,7 +68,44 @@ export class BuscarJugador {
           res
         );
 
-        this.resultados = res?.data ?? [];
+        let respuesta = res;
+
+if (typeof res === 'string') {
+  respuesta = JSON.parse(res);
+}
+
+let datosApi: any[] = [];
+
+if (Array.isArray(respuesta?.data)) {
+  datosApi = respuesta.data;
+} else if (Array.isArray(respuesta?.response)) {
+  datosApi = respuesta.response;
+} else if (typeof respuesta?.data === 'string') {
+  const dataParseada = JSON.parse(respuesta.data);
+  datosApi = dataParseada.response ?? [];
+}
+
+this.resultados = datosApi.map((item: any) => ({
+
+  id: item.player?.id,
+
+  nombre: item.player?.name,
+
+  imagen: item.player?.photo,
+
+  equipo: item.statistics?.[0]?.team?.name,
+
+  liga: item.statistics?.[0]?.league?.name,
+
+  nacionalidad: item.player?.nationality,
+
+  edad: item.player?.age,
+
+  posicion: item.statistics?.[0]?.games?.position,
+
+  datosOriginales: item
+
+}));
 
 if (this.resultados.length === 0) {
 
@@ -110,8 +147,15 @@ importarJugador(jugador: any) {
 
   this.mensaje = '';
 
-  this.jugadoresService
-    .crearJugador(jugador)
+  this.apiFootballService
+    .importarJugador(
+
+      jugador.id,
+
+      this.season
+
+    )
+
     .subscribe({
 
       next: (res: any) => {
@@ -120,21 +164,12 @@ importarJugador(jugador: any) {
           'IMPORTADO OK:',
           res
         );
-        
-        setTimeout(() => {
 
-  this.cargando = false;
-
-  this.mensaje =
-    'Jugador importado correctamente';
-
-  this.cdr.detectChanges();
-  window.location.reload();
-
-});
+        this.cargando = false;
 
         this.mensaje =
           'Jugador importado correctamente';
+            this.cdr.detectChanges();
 
       },
 

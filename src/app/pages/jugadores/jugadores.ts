@@ -92,12 +92,10 @@ implements OnInit {
 // VISIBILIDAD CARDS
 // ==========================================
 
-mostrarGestion = true;
-mostrarFormularioJugador = true;
-
+mostrarGestion = false;
+mostrarFormularioJugador = false;
 mostrarListaJugadores = false;
-
-mostrarImportarApi = true;
+mostrarImportarApi = false;
   // ==========================================
   // CONSTRUCTOR
   // ==========================================
@@ -337,11 +335,11 @@ mostrarImportarApi = true;
   // ==========================================
 
   actualizarJugador(): void {
-
+console.log(this.jugadorEditando);
     this.apiFootballService
       .actualizarJugador(
 
-        this.jugadorEditando.id,
+        this.jugadorEditando._id,
 
         this.jugadorEditando
 
@@ -519,10 +517,8 @@ mostrarImportarApi = true;
 
             jugadorId: jugadorId,
 
-            autor:
-              this.authService
-                .getUsuario(),
-
+            //autor:this.authService.getUsuario(), añadir cuento tengamos JWT
+            autor: 'Admin',
             contenido: texto,
             valoracion: this.valoracionComentario[jugadorId],
             geolocalizacion: {

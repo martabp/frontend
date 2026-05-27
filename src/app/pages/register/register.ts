@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 
+import { Router }
+from '@angular/router';
+
 import { AuthService }
 from '../../services/auth.service';
 
@@ -30,7 +33,9 @@ export class RegisterComponent {
 
   usuario = {
 
-    username: '',
+    nombre: '',
+
+    email: '',
 
     password: ''
 
@@ -49,7 +54,11 @@ export class RegisterComponent {
   // ==========================================
 
   constructor(
-    private authService: AuthService
+
+    private authService: AuthService,
+
+    private router: Router
+
   ) {}
 
   // ==========================================
@@ -58,16 +67,22 @@ export class RegisterComponent {
 
   registrar(): void {
 
+    // Limpiar mensajes
     this.mensajeExito = '';
 
     this.mensajeError = '';
 
     /*
-     * Validación mínima.
+     * Validación mínima
      */
     if (
-      !this.usuario.username ||
+
+      !this.usuario.nombre ||
+
+      !this.usuario.email ||
+
       !this.usuario.password
+
     ) {
 
       this.mensajeError =
@@ -76,44 +91,88 @@ export class RegisterComponent {
       return;
     }
 
+    // ==========================================
+    // LLAMADA API
+    // ==========================================
+
     this.authService
       .registrar(this.usuario)
 
       .subscribe({
 
-        next: () => {
+        // ======================================
+        // ÉXITO
+        // ======================================
+   
+     next: () => {
 
-          this.mensajeExito =
-            'Usuario registrado correctamente';
+  // Limpiar error
+  this.mensajeError = '';
 
-          /*
-           * Limpiar formulario.
-           */
-          this.usuario = {
+  // Mostrar éxito
+  this.mensajeExito =
+    'Usuario registrado correctamente';
 
-            username: '',
+  /*
+   * Limpiar formulario
+   */
+  this.usuario.nombre = '';
 
-            password: ''
+  this.usuario.email = '';
 
-          };
+  this.usuario.password = '';
 
-        },
+},
+        // ======================================
+        // ERROR
+        // ======================================
 
         error: (error) => {
 
           console.error(error);
 
+          // Limpiar éxito
+          this.mensajeExito = '';
+
+          // =========================
+          // ERROR 400
+          // =========================
+
           if (error.status === 400) {
 
-            this.mensajeError =
-              'El usuario ya existe';
+            if (
+              typeof error.error ===
+              'string'
+            ) {
 
-          } else if (error.status === 0) {
+              this.mensajeError =
+                error.error;
+
+            } else {
+
+              this.mensajeError =
+                'El email ya está registrado';
+
+            }
+
+          }
+
+          // =========================
+          // ERROR CONEXIÓN
+          // =========================
+
+          else if (error.status === 0) {
 
             this.mensajeError =
               'No se puede conectar con el servidor';
 
-          } else {
+          }
+
+          // =========================
+          // OTROS ERRORES
+          // =========================
+
+          else {
 
             this.mensajeError =
               'Error al registrar usuario';

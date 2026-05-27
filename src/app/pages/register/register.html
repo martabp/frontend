@@ -22,74 +22,65 @@
 
           <!-- MENSAJE ÉXITO -->
 
-          <div *ngIf="mensajeExito"
-            class="alert alert-success">
+          <div
+            *ngIf="mensajeExito"
+            class="alert alert-success mt-3 d-block"
+style="font-size:20px;">
 
             {{ mensajeExito }}
 
           </div>
 
           <!-- MENSAJE ERROR -->
+<div
+  *ngIf="mensajeError !== ''"
+  class="alert alert-danger mt-3">
 
-          <div *ngIf="mensajeError"
-            class="alert alert-danger">
+  {{ mensajeError }}
 
-            {{ mensajeError }}
+</div>
 
-          </div>
-
-          <!-- USUARIO -->
+          <!-- NOMBRE -->
 
           <div class="mb-3">
-
-            <label class="form-label">
-              Usuario
-            </label>
+            <label class="form-label"> Nombre</label>
 
             <input
               type="text"
               class="form-control"
-              placeholder="Introduzca usuario"
-              [(ngModel)]="usuario.username">
+              placeholder="Introduzca nombre"
+              [(ngModel)]="usuario.nombre">
+          </div>
+
+          <!-- EMAIL -->
+
+          <div class="mb-3">
+            <label class="form-label"> Email</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Introduzca email"
+              [(ngModel)]="usuario.email">
 
           </div>
 
           <!-- PASSWORD -->
 
           <div class="mb-4">
-
-            <label class="form-label">
-              Contraseña
-            </label>
-
+            <label class="form-label"> Contraseña</label>
             <input
               type="password"
               class="form-control"
               placeholder="Introduzca contraseña"
               [(ngModel)]="usuario.password">
-
           </div>
 
           <!-- BOTÓN -->
-
           <div class="d-grid">
-
-            <button
-              class="btn btn-success"
-              (click)="registrar()">
-
-              Registrarse
-
-            </button>
-
+            <button class="btn btn-success" (click)="registrar()"> Registrarse </button>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
-
 </div>

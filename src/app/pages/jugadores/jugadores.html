@@ -4,14 +4,16 @@
   <!-- MENSAJES -->
   <!-- ========================================== -->
 
-  <div *ngIf="mensajeExito"
+  <div
+    *ngIf="mensajeExito"
     class="alert alert-success">
 
     {{ mensajeExito }}
 
   </div>
 
-  <div *ngIf="mensajeError"
+  <div
+    *ngIf="mensajeError"
     class="alert alert-danger">
 
     {{ mensajeError }}
@@ -19,7 +21,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- CARD 1 - GESTIÓN JUGADORES -->
+  <!-- CARD 1 - LISTA JUGADORES -->
   <!-- ========================================== -->
 
   <div class="card bg-dark text-light shadow mb-4">
@@ -27,20 +29,425 @@
     <div class="card-header d-flex justify-content-between align-items-center">
 
       <h4 class="mb-0">
-        ⚽ Gestión de Jugadores
+        👥 Lista de Jugadores
       </h4>
 
       <button
         class="btn btn-outline-light btn-sm"
-        (click)="mostrarGestion = !mostrarGestion">
+        (click)="mostrarListaJugadores = !mostrarListaJugadores">
 
-        {{ mostrarGestion ? 'Ocultar' : 'Mostrar' }}
+        {{ mostrarListaJugadores ? 'Ocultar' : 'Mostrar' }}
 
       </button>
 
     </div>
 
-    <div class="card-body" *ngIf="mostrarGestion">
+    <div
+      class="card-body"
+      *ngIf="mostrarListaJugadores">
+
+      <!-- ========================================== -->
+      <!-- FILTROS -->
+      <!-- ========================================== -->
+
+      <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+          <input
+            type="text"
+            class="form-control"
+            placeholder="🔍 Buscar por nombre"
+            [(ngModel)]="busquedaNombre"
+            (input)="filtrarJugadores()">
+
+        </div>
+
+        <div class="col-md-4">
+
+          <input
+            type="text"
+            class="form-control"
+            placeholder="🏆 Equipo o liga"
+            [(ngModel)]="busquedaEquipo"
+            (input)="filtrarJugadores()">
+
+        </div>
+
+        <div class="col-md-4">
+
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="busquedaFecha"
+            (change)="filtrarJugadores()">
+
+        </div>
+
+      </div>
+
+      <!-- ========================================== -->
+      <!-- EDITAR JUGADOR -->
+      <!-- ========================================== -->
+
+      <div
+        *ngIf="jugadorEditando && authService.esAdmin()"
+        class="card bg-secondary mb-4">
+
+        <div class="card-body">
+
+          <h4 class="mb-4">
+            ✏️ Editar Jugador
+          </h4>
+
+          <div class="row g-3">
+
+            <div class="col-md-6">
+
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="jugadorEditando.nombre"
+                placeholder="Nombre">
+
+            </div>
+
+            <div class="col-md-6">
+
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="jugadorEditando.equipo"
+                placeholder="Equipo">
+
+            </div>
+
+            <div class="col-md-6">
+
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="jugadorEditando.liga"
+                placeholder="Liga">
+
+            </div>
+
+            <div class="col-md-6">
+
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="jugadorEditando.posicion"
+                placeholder="Posición">
+
+            </div>
+
+            <div class="col-12">
+
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="jugadorEditando.imagen"
+                placeholder="URL Imagen">
+
+            </div>
+
+          </div>
+
+          <div class="d-flex gap-3 mt-4">
+
+            <button
+              class="btn btn-success"
+              (click)="actualizarJugador()">
+
+              💾 Actualizar
+
+            </button>
+
+            <button
+              class="btn btn-outline-light"
+              (click)="cancelarEdicion()">
+
+              ❌ Cancelar
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ========================================== -->
+      <!-- TABLA JUGADORES -->
+      <!-- ========================================== -->
+
+      <div
+        class="table-responsive"
+        style="max-height: 450px; overflow-y: auto;">
+
+        <table
+          class="table table-dark table-hover align-middle">
+
+          <thead>
+
+            <tr>
+
+              <th>Foto</th>
+              <th>Nombre</th>
+              <th>Edad</th>
+              <th>Nacionalidad</th>
+              <th>Posición</th>
+              <th>Equipo</th>
+              <th>Liga</th>
+              <th>Fecha alta</th>
+              <th>Acciones</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <ng-container *ngFor="let jugador of jugadores">
+
+              <!-- JUGADOR -->
+
+              <tr>
+
+                <td>
+
+                  <img
+                    [src]="jugador.imagen && jugador.imagen !== ''
+                    ? jugador.imagen
+                    : 'https://cdn-icons-png.flaticon.com/512/147/147142.png'"
+                    width="60"
+                    class="rounded shadow">
+
+                </td>
+
+                <td>
+
+                  {{ jugador.nombre }}
+
+                  <div class="text-warning small mt-1">
+
+                    ⭐ {{ obtenerMediaValoraciones(jugador.id) }}
+
+                  </div>
+
+                </td>
+
+                <td>{{ jugador.edad || '-' }}</td>
+
+                <td>{{ jugador.nacionalidad || '-' }}</td>
+
+                <td>{{ jugador.posicion || '-' }}</td>
+
+                <td>{{ jugador.equipo || '-' }}</td>
+
+                <td>{{ jugador.liga || '-' }}</td>
+
+                <td>
+
+                  {{ jugador.fechaAlta
+                    ? (jugador.fechaAlta | date:'dd/MM/yyyy')
+                    : '-' }}
+
+                </td>
+
+                <td>
+
+                  <div class="d-flex gap-2">
+
+                    <!-- EDITAR -->
+
+                    <button
+                      *ngIf="authService.esAdmin()"
+                      class="btn btn-warning btn-sm"
+                      (click)="editarJugador(jugador)">
+
+                      ✏️
+
+                    </button>
+
+                    <!-- ELIMINAR -->
+
+                    <button
+                      *ngIf="authService.esAdmin()"
+                      class="btn btn-danger btn-sm"
+                      (click)="eliminarJugador(jugador._id || jugador.id)">
+
+                      🗑️
+
+                    </button>
+
+                    <!-- COMENTARIOS -->
+
+                    <button
+                      *ngIf="authService.estaLogueado()"
+                      class="btn btn-info btn-sm"
+                      (click)="toggleComentarios(jugador._id || jugador.id)" >
+
+                      💬
+
+                    </button>
+
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+              <!-- ========================================== -->
+              <!-- COMENTARIOS -->
+              <!-- ========================================== -->
+
+              <tr *ngIf="mostrarComentarios[jugador._id || jugador.id]">
+
+                <td colspan="9">
+
+                  <div class="card bg-secondary p-3 border border-info">
+
+                    <h5 class="mb-3">
+                      💬 Comentarios
+                    </h5>
+
+                    <!-- NUEVO COMENTARIO -->
+
+                    <div class="mt-3">
+
+                      <textarea
+                        class="form-control mb-2"
+                        rows="2"
+                        maxlength="1000"
+                        placeholder="Escribe un comentario..."
+                        [(ngModel)]="nuevoComentario[jugador._id || jugador.id]">
+                      </textarea>
+
+                      <label class="form-label text-warning">
+
+                        ⭐ Valoración
+
+                      </label>
+
+                      <select
+                        class="form-select mb-2 shadow border-warning"
+                        [(ngModel)]="valoracionComentario[jugador._id || jugador.id]">
+
+                        <option [ngValue]="1">⭐</option>
+                        <option [ngValue]="2">⭐⭐</option>
+                        <option [ngValue]="3">⭐⭐⭐</option>
+                        <option [ngValue]="4">⭐⭐⭐⭐</option>
+                        <option [ngValue]="5">⭐⭐⭐⭐⭐</option>
+
+                      </select>
+
+                      <button
+                        class="btn btn-success btn-sm mb-3"
+                        (click)="crearComentario(jugador._id || jugador.id)">
+
+                        Enviar comentario
+
+                      </button>
+
+                    </div>
+
+                    <!-- LISTA COMENTARIOS -->
+
+                    <div
+                      *ngFor="let comentario of comentarios[jugador._id || jugador.id]"
+                      class="mb-2 p-2 bg-dark rounded text-white">
+
+                      <strong>{{ comentario.autor }}</strong>
+
+                      <div class="text-warning">
+
+                        {{ '⭐'.repeat(comentario.valoracion || 0) }}
+
+                      </div>
+
+                      <small class="ms-2">
+
+                        {{ comentario.fechaAlta
+                          | date:'dd/MM/yyyy HH:mm' }}
+
+                      </small>
+
+                      <div class="mt-1">
+
+                        {{ comentario.contenido }}
+
+                      </div>
+
+                      <!-- MAPA -->
+
+                      <a
+                        *ngIf="comentario.geolocalizacion"
+                        class="text-info"
+                        target="_blank"
+                        [href]="'https://www.google.com/maps?q='
+                        + comentario.geolocalizacion.latitud
+                        + ','
+                        + comentario.geolocalizacion.longitud">
+
+                        📍 Ver ubicación
+
+                      </a>
+
+                      <!-- ELIMINAR COMENTARIO -->
+
+                      <div class="mt-2">
+
+                        <button
+                          *ngIf="authService.esAdmin()"
+                          class="btn btn-danger btn-sm"
+                          (click)="eliminarComentario(comentario._id || comentario.id, jugador._id || jugador.id)">
+
+                          🗑️ Eliminar
+
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            </ng-container>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- CARD 2 - GESTIÓN JUGADORES -->
+  <!-- ========================================== -->
+
+  <div
+    *ngIf="authService.estaLogueado()"
+    class="card bg-dark text-light shadow mb-4">
+
+    <div class="card-header">
+
+      <h4 class="mb-0">
+        ⚙️ Gestión de Jugadores
+      </h4>
+
+    </div>
+
+    <div class="card-body">
 
       <!-- ========================================== -->
       <!-- AÑADIR JUGADOR -->
@@ -70,8 +477,6 @@
 
             <div class="row g-3">
 
-              <!-- NOMBRE -->
-
               <div class="col-md-6">
 
                 <input
@@ -83,8 +488,6 @@
 
               </div>
 
-              <!-- EQUIPO -->
-
               <div class="col-md-6">
 
                 <input
@@ -94,8 +497,6 @@
                   placeholder="Equipo">
 
               </div>
-
-              <!-- LIGA -->
 
               <div class="col-md-6">
 
@@ -107,8 +508,6 @@
 
               </div>
 
-              <!-- POSICIÓN -->
-
               <div class="col-md-6">
 
                 <input
@@ -119,8 +518,6 @@
 
               </div>
 
-              <!-- EDAD -->
-
               <div class="col-md-4">
 
                 <input
@@ -130,8 +527,6 @@
                   placeholder="Edad">
 
               </div>
-
-              <!-- IMAGEN -->
 
               <div class="col-md-8">
 
@@ -144,8 +539,6 @@
               </div>
 
             </div>
-
-            <!-- BOTÓN -->
 
             <div class="mt-4">
 
@@ -166,7 +559,7 @@
       </div>
 
       <!-- ========================================== -->
-      <!-- LISTA JUGADORES -->
+      <!-- IMPORTAR DESDE API -->
       <!-- ========================================== -->
 
       <div class="card bg-secondary">
@@ -174,369 +567,24 @@
         <div class="card-header d-flex justify-content-between align-items-center">
 
           <h4 class="mb-0">
-            👥 Lista de Jugadores
+            🌐 Importar desde API
           </h4>
 
           <button
             class="btn btn-outline-light btn-sm"
-            (click)="mostrarListaJugadores = !mostrarListaJugadores">
+            (click)="mostrarImportarApi = !mostrarImportarApi">
 
-            {{ mostrarListaJugadores ? 'Ocultar' : 'Mostrar' }}
+            {{ mostrarImportarApi ? 'Ocultar' : 'Mostrar' }}
 
           </button>
 
         </div>
 
-        <div class="card-body" *ngIf="mostrarListaJugadores">
-
-          <!-- ========================================== -->
-          <!-- FILTROS -->
-          <!-- ========================================== -->
-
-          <div class="row g-3 mb-4">
-
-            <div class="col-md-4">
-
-              <input
-                type="text"
-                class="form-control"
-                placeholder="🔍 Buscar por nombre"
-                [(ngModel)]="busquedaNombre"
-                (input)="filtrarJugadores()">
-
-            </div>
-
-            <div class="col-md-4">
-
-              <input
-                type="text"
-                class="form-control"
-                placeholder="🏆 Equipo o liga"
-                [(ngModel)]="busquedaEquipo"
-                (input)="filtrarJugadores()">
-
-            </div>
-
-            <div class="col-md-4">
-
-              <input
-                type="date"
-                class="form-control"
-                [(ngModel)]="busquedaFecha"
-                (change)="filtrarJugadores()">
-
-            </div>
-
-          </div>
-
-          <!-- ========================================== -->
-          <!-- EDITAR -->
-          <!-- ========================================== -->
-
-          <div *ngIf="jugadorEditando && authService.esAdmin()"
-            class="card bg-dark mb-4">
-
-            <div class="card-body">
-
-              <h4 class="mb-4">
-                ✏️ Editar Jugador
-              </h4>
-
-              <div class="row g-3">
-
-                <div class="col-md-6">
-
-                  <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="jugadorEditando.nombre"
-                    placeholder="Nombre">
-
-                </div>
-
-                <div class="col-md-6">
-
-                  <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="jugadorEditando.equipo"
-                    placeholder="Equipo">
-
-                </div>
-
-                <div class="col-md-6">
-
-                  <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="jugadorEditando.liga"
-                    placeholder="Liga">
-
-                </div>
-
-                <div class="col-md-6">
-
-                  <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="jugadorEditando.posicion"
-                    placeholder="Posición">
-
-                </div>
-
-                <div class="col-12">
-
-                  <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="jugadorEditando.imagen"
-                    placeholder="URL Imagen">
-
-                </div>
-
-              </div>
-
-              <div class="d-flex gap-3 mt-4">
-
-                <button
-                  class="btn btn-success"
-                  (click)="actualizarJugador()">
-
-                  💾 Actualizar
-
-                </button>
-
-                <button
-                  class="btn btn-outline-light"
-                  (click)="cancelarEdicion()">
-
-                  ❌ Cancelar
-
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- ========================================== -->
-          <!-- TABLA -->
-          <!-- ========================================== -->
-
-          <div class="table-responsive"  style="max-height: 450px; overflow-y: auto;">
-
-            <table
-              class="table table-dark table-hover align-middle">
-
-              <thead>
-
-                <tr>
-
-                  <th>Foto</th>
-                  <th>Nombre</th>
-                  <th>Edad</th>
-                  <th>Nacionalidad</th>
-                  <th>Posición</th>
-                  <th>Equipo</th>
-                  <th>Liga</th>
-                  <th>Fecha alta</th>
-                  <th>Acciones</th>
-
-                </tr>
-
-              </thead>
-
-              <tbody>
-
-                <ng-container *ngFor="let jugador of jugadores">
-
-                  <!-- JUGADOR -->
-
-                  <tr>
-
-                    <td>
-
-                      <img
-                        [src]="jugador.imagen && jugador.imagen !== ''
-                        ? jugador.imagen
-                        : 'https://cdn-icons-png.flaticon.com/512/147/147142.png'"
-                        width="60"
-                        class="rounded shadow">
-
-                    </td>
-
-                    <td> {{ jugador.nombre }} <div class="text-warning small mt-1"> ⭐ {{ obtenerMediaValoraciones(jugador.id) }}</div></td>
-
-                    <td>{{ jugador.edad || '-' }}</td>
-
-                    <td>{{ jugador.nacionalidad || '-' }}</td>
-
-                    <td>{{ jugador.posicion || '-' }}</td>
-
-                    <td>{{ jugador.equipo || '-' }}</td>
-
-                    <td>{{ jugador.liga || '-' }}</td>
-
-                    <td>
-
-                      {{ jugador.fechaAlta
-                        ? (jugador.fechaAlta | date:'dd/MM/yyyy')
-                        : '-' }}
-
-                    </td>
-
-                    <td>
-
-                      <div class="d-flex gap-2">
-
-                        <!-- EDITAR -->
-
-                        <button *ngIf="authService.esAdmin()"
-                          class="btn btn-warning btn-sm"
-                          (click)="editarJugador(jugador)">
-
-                          ✏️
-
-                        </button>
-
-                        <!-- ELIMINAR -->
-
-                        <button *ngIf="authService.esAdmin()"
-                          class="btn btn-danger btn-sm"
-                          (click)="eliminarJugador(jugador.id)">
-
-                          🗑️
-
-                        </button>
-
-                        <!-- COMENTARIOS -->
-
-                        <button
-                          class="btn btn-info btn-sm"
-                          (click)="toggleComentarios(jugador.id)">
-
-                          💬
-
-                        </button>
-
-                      </div>
-
-                    </td>
-
-                  </tr>
-
-                  <!-- ========================================== -->
-                  <!-- COMENTARIOS -->
-                  <!-- ========================================== -->
-
-                  <tr *ngIf="mostrarComentarios[jugador.id]">
-
-                    <td colspan="9">
-
-                      <div class="card bg-dark p-3 border border-info">
-
-                        <h5 class="mb-3">
-                          💬 Comentarios
-                        </h5>
-
-                        <!-- NUEVO COMENTARIO -->
-
-                        <div class="mt-3">
-                          <textarea
-                            class="form-control mb-2"
-                            rows="2"
-                            maxlength="1000"
-                            placeholder="Escribe un comentario..."
-                            [(ngModel)]="nuevoComentario[jugador.id]">
-                          </textarea>
-                          <label class="form-label text-warning">⭐ Valoración</label>
-                          <select
-  class="form-select mb-2 shadow border-warning"
-  [(ngModel)]="valoracionComentario[jugador.id]">
-
-  <option [ngValue]="1">⭐</option>
-  <option [ngValue]="2">⭐⭐</option>
-  <option [ngValue]="3">⭐⭐⭐</option>
-  <option [ngValue]="4">⭐⭐⭐⭐</option>
-  <option [ngValue]="5">⭐⭐⭐⭐⭐</option>
-
-</select>
-                          
-
-                          <button
-                            class="btn btn-success btn-sm mb-3"
-                            (click)="crearComentario(jugador.id)">
-
-                            Enviar comentario
-
-                          </button>
-
-                        </div>
-                        <!-- LISTA -->
-
-                        <div *ngFor="let comentario of comentarios[jugador.id]"
-                          class="mb-2 p-2 bg-secondary rounded text-white">
-
-                          <strong>{{ comentario.autor }}</strong>
-                          <div class="text-warning">{{ '⭐'.repeat(comentario.valoracion || 0) }}</div>
-                          <small class="ms-2">
-
-                            {{ comentario.fechaAlta
-                              | date:'dd/MM/yyyy HH:mm' }}
-
-                          </small>
-
-                          <div class="mt-1">
-
-                            {{ comentario.contenido }}
-
-                          </div>
-
-                          <!-- MAPA -->
-
-                          <a *ngIf="comentario.geolocalizacion"
-                            class="text-info"
-                            target="_blank"
-                            [href]="'https://www.google.com/maps?q='
-                            + comentario.geolocalizacion.latitud
-                            + ','
-                            + comentario.geolocalizacion.longitud">
-
-                            📍 Ver ubicación
-
-                          </a>
-
-                          <!-- ELIMINAR -->
-
-                          <div class="mt-2">
-
-                            <button *ngIf="authService.esAdmin()"
-                              class="btn btn-danger btn-sm"
-                              (click)="eliminarComentario(comentario.id, jugador.id)">
-
-                              🗑️ Eliminar
-
-                            </button>
-
-                          </div>
-
-                        </div>
-
-
-                      </div>
-
-                    </td>
-
-                  </tr>
-
-                </ng-container>
-
-              </tbody>
-
-            </table>
-
-          </div>
+        <div
+          class="card-body"
+          *ngIf="mostrarImportarApi">
+
+          <app-buscar-jugador></app-buscar-jugador>
 
         </div>
 
@@ -547,41 +595,11 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- CARD 2 - IMPORTAR DESDE API -->
-  <!-- ========================================== -->
-
-  <div class="card bg-dark text-light shadow mb-4">
-
-    <div class="card-header d-flex justify-content-between align-items-center">
-
-      <h4 class="mb-0">
-        🌐 Importar desde API
-      </h4>
-
-      <button
-        class="btn btn-outline-light btn-sm"
-        (click)="mostrarImportarApi = !mostrarImportarApi">
-
-        {{ mostrarImportarApi ? 'Ocultar' : 'Mostrar' }}
-
-      </button>
-
-    </div>
-
-    <div class="card-body" *ngIf="mostrarImportarApi">
-
-      <app-buscar-jugador></app-buscar-jugador>
-
-    </div>
-
-  </div>
-
-  <!-- ========================================== -->
   <!-- CARD 3 - GESTOR NOTICIAS -->
   <!-- ========================================== -->
 
   <div
-    *ngIf="true"
+    *ngIf="authService.esAdmin()"
     class="card bg-dark text-light shadow mb-4">
 
     <div class="card-header">
@@ -594,7 +612,7 @@
 
     <div class="card-body">
 
-      <!-- AQUÍ IRÁ EL GESTOR DE NOTICIAS -->
+      <!-- AQUÍ IRÁ EL GESTOR CORBA -->
 
     </div>
 

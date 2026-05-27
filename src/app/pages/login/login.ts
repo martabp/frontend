@@ -25,8 +25,8 @@ from '../../services/auth.service';
 })
 export class Login {
 
-  username = '';
-
+  email = '';
+  password = '';
   mensaje = '';
 
   constructor(
@@ -40,7 +40,7 @@ export class Login {
 
   iniciarSesion(): void {
 
-    if (!this.username.trim()) {
+    if (!this.email.trim()) {
 
       this.mensaje =
         'Introduce un usuario';
@@ -49,7 +49,7 @@ export class Login {
     }
 
     this.authService
-      .login(this.username)
+      .login(this.email,this.password)
 
       .subscribe({
 

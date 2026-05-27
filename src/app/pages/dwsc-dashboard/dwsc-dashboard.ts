@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
-
-import { JugadoresComponent } from '../jugadores/jugadores';
 import { RouterLink } from '@angular/router';
 
 
@@ -11,7 +8,6 @@ import { RouterLink } from '@angular/router';
 
   imports: [
     CommonModule,
-    JugadoresComponent,
     RouterLink
   ],
 

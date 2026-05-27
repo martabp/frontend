@@ -1,21 +1,38 @@
 import { Injectable } from '@angular/core';
 
+import { BackendService }
+from './backend';
+
 import {
+
   HttpClient,
   HttpParams
+
 } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class ComentariosService {
 
-  private apiUrl =
-    'http://localhost:3000/api/comentarios';
-
   constructor(
-    private http: HttpClient
+
+    private http: HttpClient,
+
+    private backendService:
+      BackendService
+
   ) {}
+
+  /*
+   * URL dinámica backend
+   */
+private get apiUrl(): string {
+
+  return 'http://localhost:8082/api/comentarios';
+
+}
 
   // =====================================
   // OBTENER COMENTARIOS
@@ -30,9 +47,13 @@ export class ComentariosService {
         .set('jugadorId', jugadorId);
 
     return this.http.get<any[]>(
+
       `${this.apiUrl}/jugador`,
+
       { params }
+
     );
+
   }
 
   // =====================================
@@ -44,19 +65,29 @@ export class ComentariosService {
   ) {
 
     return this.http.post(
+
       this.apiUrl,
+
       comentario
+
     );
+
   }
 
   // =====================================
   // ELIMINAR COMENTARIO
   // =====================================
 
-  eliminarComentario(id: string) {
+  eliminarComentario(
+    id: string
+  ) {
 
     return this.http.delete(
+
       `${this.apiUrl}/${id}`
+
     );
+
   }
+
 }

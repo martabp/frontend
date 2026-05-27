@@ -9,28 +9,41 @@ from '@angular/common';
 import { AuthService }
 from '../../services/auth.service';
 
+import { BackendService }
+from '../../services/backend';
+
 @Component({
+
   selector: 'app-navbar',
 
   standalone: true,
 
   imports: [
+
     RouterLink,
+
     CommonModule
+
   ],
 
   templateUrl: './navbar.html',
 
-  styleUrl: './navbar.css',
+  styleUrl: './navbar.css'
+
 })
 
 export class Navbar {
 
   constructor(
 
-    public authService: AuthService,
+    public authService:
+      AuthService,
 
-    private router: Router
+    public backendService:
+      BackendService,
+
+    private router:
+      Router
 
   ) {}
 
@@ -43,5 +56,7 @@ export class Navbar {
     this.authService.logout();
 
     this.router.navigate(['/']);
+
   }
+
 }

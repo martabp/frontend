@@ -36,111 +36,170 @@ export class ApiFootballService {
   // BUSCAR EN API EXTERNA
   // ==========================================
 
-  buscarJugador(
-    nombre: string,
-    temporada: number,
-    liga: number
+buscarJugador(
+  nombre: string,
+  temporada: number,
+  liga: number
+) {
+
+  // =====================================
+  // BACKEND TRWM (Node.js)
+  // =====================================
+
+  if (
+    this.backendService.obtenerBackend()
+      === 'TRWM'
   ) {
 
     let params = new HttpParams()
 
-      .set('nombre', nombre)
-
       .set(
-        'temporada',
+        'season',
         temporada
       )
 
       .set(
-        'liga',
+        'league',
         liga
       );
 
     return this.http.get<any>(
 
-      `${this.getBaseUrl()}/external/buscar`,
+      `${this.getBaseUrl()}/api/jugadores/external/search/${nombre}`,
 
       { params }
 
     );
-
   }
+
+  // =====================================
+  // BACKEND DWSC (Spring Boot)
+  // =====================================
+
+  let params = new HttpParams()
+
+    .set(
+      'nombre',
+      nombre
+    )
+
+    .set(
+      'season',
+      temporada
+    )
+
+    .set(
+      'liga',
+      liga
+    );
+
+  return this.http.get<any>(
+
+    `${this.getBaseUrl()}/api/jugadores/buscar-api`,
+
+    { params }
+
+  );
+
+}
 
   // ==========================================
   // IMPORTAR JUGADOR
   // ==========================================
 
-  importarJugador() {
+importarJugador(
+  playerId: number,
+  temporada: number
+) {
 
-    return this.http.get<any>(
+  let params = new HttpParams()
 
-      `${this.getBaseUrl()}/external/importar`
-
+    .set(
+      'season',
+      temporada
     );
 
-  }
+  return this.http.post<any>(
+
+    `${this.getBaseUrl()}/api/jugadores/import/${playerId}`,
+
+    {},
+
+    { params }
+
+  );
+
+}
 
   // ==========================================
   // OBTENER JUGADORES
   // ==========================================
 
-  obtenerJugadores() {
+obtenerJugadores() {
 
-    return this.http.get<any>(
+  return this.http.get<any>(
 
-      `${this.getBaseUrl()}/jugadores`
+    this.getPlayersEndpoint()
 
-    );
+  );
 
-  }
+}
 
   // ==========================================
   // CREAR JUGADOR
   // ==========================================
 
-  crearJugador(jugador: any) {
+crearJugador(jugador: any) {
 
-    return this.http.post<any>(
+  return this.http.post<any>(
 
-      `${this.getBaseUrl()}/jugadores`,
+    this.getPlayersEndpoint(),
 
-      jugador
+    jugador
 
-    );
+  );
 
-  }
+}
 
   // ==========================================
   // ACTUALIZAR JUGADOR
   // ==========================================
 
-  actualizarJugador(
-    id: string,
-    jugador: any
-  ) {
+actualizarJugador(
+  id: string,
+  jugador: any
+  
+) {
 
-    return this.http.put<any>(
+  return this.http.put<any>(
 
-      `${this.getBaseUrl()}/jugadores/${id}`,
+    `${this.getPlayersEndpoint()}/${id}`,
 
-      jugador
+    jugador
 
-    );
+  );
 
-  }
+}
 
   // ==========================================
   // ELIMINAR JUGADOR
   // ==========================================
 
-  eliminarJugador(id: string) {
+eliminarJugador(id: string) {
 
-    return this.http.delete<any>(
+  return this.http.delete<any>(
 
-      `${this.getBaseUrl()}/jugadores/${id}`
+    `${this.getPlayersEndpoint()}/${id}`
 
-    );
+  );
 
-  }
+}
+  // ==========================================
+  // CAMBIO RUTAS SEGUN BACKEND
+  // ==========================================
+private getPlayersEndpoint(): string {
 
+  return `${this.getBaseUrl()}/api/jugadores`;
+
+}
 }
