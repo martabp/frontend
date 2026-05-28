@@ -1,20 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import {
+import { HttpClient } from '@angular/common/http';
 
-  HttpClient
+import { Observable, tap } from 'rxjs';
 
-} from '@angular/common/http';
-
-import {
-
-  Observable,
-  tap
-
-} from 'rxjs';
-
-import { BackendService }
-from './backend';
+import { BackendService } from './backend';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +25,24 @@ export class AuthService {
    * URL dinámica backend
    */
   private get apiUrl(): string {
+
+    // ============================
+    // BACKEND TRWM
+    // ============================
+
+    if (
+      this.backendService.obtenerBackend()
+      === 'TRWM'
+    ) {
+
+      return `${this.backendService
+        .getBaseUrl()}/api/auth`;
+
+    }
+
+    // ============================
+    // BACKEND DWSC
+    // ============================
 
     return `${this.backendService
       .getBaseUrl()}/auth`;
@@ -63,7 +71,12 @@ export class AuthService {
 
       tap((response: any) => {
 
-        // Guardar token
+      
+
+        // =====================================
+        // GUARDAR TOKEN
+        // =====================================
+
         localStorage.setItem(
 
           'token',
@@ -72,21 +85,16 @@ export class AuthService {
 
         );
 
-        // Guardar rol
-        localStorage.setItem(
+        // =====================================
+        // GUARDAR USUARIO
+        // =====================================
 
-          'rol',
-
-          response.rol
-
-        );
-
-        // Guardar usuario
         localStorage.setItem(
 
           'usuario',
 
-          email
+          response.usuario.nombre
+
 
         );
 
@@ -104,10 +112,6 @@ export class AuthService {
 
     localStorage.removeItem(
       'token'
-    );
-
-    localStorage.removeItem(
-      'rol'
     );
 
     localStorage.removeItem(
@@ -129,14 +133,44 @@ export class AuthService {
   }
 
   // ============================
-  // OBTENER ROL
+  // OBTENER ROL DESDE JWT
   // ============================
 
   getRol(): string | null {
 
-    return localStorage.getItem(
-      'rol'
-    );
+    const token = this.getToken();
+
+    if (!token) {
+
+      return null;
+
+    }
+
+    try {
+
+      const payload = JSON.parse(
+
+        atob(token.split('.')[1])
+
+      );
+
+      console.log(
+        'PAYLOAD JWT:',
+        payload
+      );
+
+      return payload.rol;
+
+    } catch (error) {
+
+      console.error(
+        'Error al leer JWT',
+        error
+      );
+
+      return null;
+
+    }
 
   }
 

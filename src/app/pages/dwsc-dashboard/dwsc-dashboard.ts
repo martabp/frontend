@@ -12,10 +12,8 @@ import { RouterLink } from '@angular/router';
   ],
 
   templateUrl: './dwsc-dashboard.html',
-
   styleUrl: './dwsc-dashboard.css'
 })
 
 export class DwscDashboard {
-
 }

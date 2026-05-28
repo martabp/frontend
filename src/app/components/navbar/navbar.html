@@ -3,7 +3,6 @@
   <div class="container-fluid">
 
     <!-- LOGO -->
-
     <a
       class="navbar-brand fw-bold text-success"
       routerLink="/">
@@ -11,27 +10,17 @@
       ⚽ Football App
 
     </a>
-<span class="badge bg-info ms-3">
 
-  Backend:
+    <span class="badge bg-info ms-3">
+      Backend: {{ backendService.obtenerBackend() }}
+    </span>
 
-  {{ backendService.obtenerBackend() }}
-
-</span>
     <!-- BOTÓN MÓVIL -->
-
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav">
-
+    <button class="navbar-toggler" type="button"  data-bs-toggle="collapse"  data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
-
     </button>
 
     <!-- NAVBAR -->
-
     <div
       class="collapse navbar-collapse"
       id="navbarNav">
@@ -39,87 +28,65 @@
       <ul class="navbar-nav ms-auto">
 
         <!-- INICIO -->
-
         <li class="nav-item">
-
-          <a
-            class="nav-link"
-            routerLink="/">
-
+          <a  class="nav-link" routerLink="/">
             Inicio
-
           </a>
-
         </li>
 
         <!-- LOGIN -->
-
         <li
           class="nav-item"
           *ngIf="!authService.estaLogueado()">
 
           <a
-            class="nav-link text-info"
-            routerLink="/login">
-
+            class="nav-link text-info"  routerLink="/login">
             Login
-
           </a>
-
         </li>
-        <!-- REGISTRO USUARIO -->
-<a routerLink="/register" class="btn btn-outline-success"> Registrarse </a>
-        <!-- USUARIO -->
 
+        <!-- REGISTRO -->
+        <li
+          class="nav-item"
+          *ngIf="!authService.estaLogueado()">
+
+          <a
+            routerLink="/register"
+            class="btn btn-outline-success ms-2">
+            Registrarse
+          </a>
+        </li>
+
+        <!-- USUARIO -->
         <li
           class="nav-item"
           *ngIf="authService.estaLogueado()">
 
-          <span
-            class="nav-link text-success fw-bold">
-
-            👤
-            {{ authService.getUsuario() }}
-
+          <span class="nav-link text-success fw-bold">
+            👤 {{ authService.getUsuario() }}
           </span>
-
         </li>
 
         <!-- ADMIN -->
-
         <li
           class="nav-item"
           *ngIf="authService.esAdmin()">
-
-          <span
-            class="nav-link text-warning fw-bold">
-
+          <span class="nav-link text-warning fw-bold">
             ADMIN
-
           </span>
 
         </li>
 
         <!-- LOGOUT -->
-
         <li
           class="nav-item"
           *ngIf="authService.estaLogueado()">
 
-          <button
-            class="btn btn-outline-danger btn-sm ms-2"
-            (click)="logout()">
-
+          <button class="btn btn-outline-danger btn-sm ms-2"  (click)="logout()">
             Logout
-
           </button>
-
         </li>
-
       </ul>
-
     </div>
-
   </div>
-
 </nav>

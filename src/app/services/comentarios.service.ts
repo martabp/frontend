@@ -30,7 +30,26 @@ export class ComentariosService {
    */
 private get apiUrl(): string {
 
-  return 'http://localhost:8082/api/comentarios';
+  // ============================
+  // BACKEND TRWM
+  // ============================
+
+  if (
+    this.backendService.obtenerBackend()
+      === 'TRWM'
+  ) {
+
+    return `${this.backendService
+      .getBaseUrl()}/api/comentarios`;
+
+  }
+
+  // ============================
+  // BACKEND DWSC
+  // ============================
+
+  return `${this.backendService
+    .getBaseUrl()}/api/comentarios`;
 
 }
 

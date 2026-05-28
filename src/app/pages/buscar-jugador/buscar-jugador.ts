@@ -17,15 +17,10 @@ import { JugadoresService } from '../../services/jugadores';
 export class BuscarJugador {
 
   nombre: string = '';
-
   season: number = 2024;
-
   liga: number = 39;
-
   resultados: any[] = [];
-
   cargando: boolean = false;
-
   mensaje: string = '';
 
   constructor(
@@ -44,21 +39,13 @@ export class BuscarJugador {
   buscarJugador() {
 
     console.log('CLICK BUSCAR OK');
-
     this.cargando = true;
-
     this.resultados = [];
-
     this.mensaje = '';
-
     this.apiFootballService.buscarJugador(
-
       this.nombre,
-
       this.season,
-
       this.liga
-
     ).subscribe({
 
       next: (res: any) => {
@@ -88,57 +75,34 @@ if (Array.isArray(respuesta?.data)) {
 this.resultados = datosApi.map((item: any) => ({
 
   id: item.player?.id,
-
   nombre: item.player?.name,
-
   imagen: item.player?.photo,
-
   equipo: item.statistics?.[0]?.team?.name,
-
   liga: item.statistics?.[0]?.league?.name,
-
   nacionalidad: item.player?.nationality,
-
   edad: item.player?.age,
-
   posicion: item.statistics?.[0]?.games?.position,
-
   datosOriginales: item
 
 }));
 
 if (this.resultados.length === 0) {
-
-  this.mensaje =
-    'No se encontraron jugadores';
-
+  this.mensaje = 'No se encontraron jugadores';
 } else {
-
   this.mensaje = '';
-
 }
         setTimeout(() => { this.cdr.detectChanges();});
-
         this.cargando = false;
-
       },
-
       error: (err) => {
-
         console.log(
           'ERROR BACKEND:',
           err
         );
-
         this.cargando = false;
-
-        this.mensaje =
-          'Error al buscar jugadores';
-
+        this.mensaje =  'Error al buscar jugadores';
       }
-
     });
-
   }
 
 importarJugador(jugador: any) {
@@ -147,14 +111,11 @@ importarJugador(jugador: any) {
 
   this.mensaje = '';
 
-  this.apiFootballService
-    .importarJugador(
-
-      jugador.id,
-
-      this.season
-
-    )
+this.apiFootballService
+  .importarJugador(
+    jugador.id,
+    this.season
+  )
 
     .subscribe({
 
@@ -169,7 +130,8 @@ importarJugador(jugador: any) {
 
         this.mensaje =
           'Jugador importado correctamente';
-            this.cdr.detectChanges();
+
+        this.cdr.detectChanges();
 
       },
 
@@ -190,5 +152,4 @@ importarJugador(jugador: any) {
     });
 
 }
-
 }

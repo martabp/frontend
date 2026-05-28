@@ -232,7 +232,7 @@
 
                   <div class="text-warning small mt-1">
 
-                    ⭐ {{ obtenerMediaValoraciones(jugador.id) }}
+                    ⭐ {{ obtenerMediaValoraciones(jugador._id || jugador.id) }}
 
                   </div>
 
@@ -388,9 +388,9 @@
                         class="text-info"
                         target="_blank"
                         [href]="'https://www.google.com/maps?q='
-                        + comentario.geolocalizacion.latitud
+                        + comentario.geolocalizacion.latitude
                         + ','
-                        + comentario.geolocalizacion.longitud">
+                        + comentario.geolocalizacion.longitude">
 
                         📍 Ver ubicación
 
@@ -493,8 +493,9 @@
                 <input
                   type="text"
                   class="form-control"
+                    required
                   [(ngModel)]="nuevoJugador.equipo"
-                  placeholder="Equipo">
+                  placeholder="Equipo *">
 
               </div>
 
@@ -503,8 +504,9 @@
                 <input
                   type="text"
                   class="form-control"
+                    required
                   [(ngModel)]="nuevoJugador.liga"
-                  placeholder="Liga">
+                  placeholder="Liga *">
 
               </div>
 

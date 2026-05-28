@@ -129,40 +129,52 @@ mostrarImportarApi = false;
   // ==========================================
   // OBTENER JUGADORES
   // ==========================================
+obtenerJugadores(): void {
 
-  obtenerJugadores(): void {
+  this.apiFootballService
+    .obtenerJugadores()
 
-    this.apiFootballService
-      .obtenerJugadores()
+    .subscribe({
 
-      .subscribe({
+      next: (respuesta: any) => {
 
-        next: (respuesta: any) => {
+        this.jugadores =
+          [...respuesta.data];
 
-          this.jugadores =
-            [...respuesta.data];
+        this.jugadoresOriginales =
+          [...respuesta.data];
 
-          this.jugadoresOriginales =
-            [...respuesta.data];
+        // ==================================
+        // CARGAR COMENTARIOS AUTOMÁTICAMENTE
+        // ==================================
 
-          this.mensajeError = '';
+        this.jugadores.forEach((jugador: any) => {
 
-          this.cdRef.detectChanges();
+          const id =
+            jugador._id || jugador.id;
 
-        },
+          this.cargarComentarios(id);
 
-        error: (error) => {
+        });
 
-          console.error(error);
+        this.mensajeError = '';
 
-          this.mensajeError =
-            'Error al obtener jugadores';
+        this.cdRef.detectChanges();
 
-        }
+      },
 
-      });
+      error: (error) => {
 
-  }
+        console.error(error);
+
+        this.mensajeError =
+          'Error al obtener jugadores';
+
+      }
+
+    });
+
+}
 
   // ==========================================
   // FILTRAR JUGADORES
@@ -338,11 +350,8 @@ mostrarImportarApi = false;
 console.log(this.jugadorEditando);
     this.apiFootballService
       .actualizarJugador(
-
-        this.jugadorEditando._id,
-
+        this.jugadorEditando.id || this.jugadorEditando._id ,
         this.jugadorEditando
-
       )
 
       .subscribe({
@@ -518,7 +527,7 @@ console.log(this.jugadorEditando);
             jugadorId: jugadorId,
 
             //autor:this.authService.getUsuario(), añadir cuento tengamos JWT
-            autor: 'Admin',
+            autor: this.authService.getUsuario(),
             contenido: texto,
             valoracion: this.valoracionComentario[jugadorId],
             geolocalizacion: {
@@ -650,7 +659,7 @@ obtenerMediaValoraciones(
 
   const valoraciones =
     lista
-      .map((c: any) => c.valoracion)
+      .map((c: any) => Number(c.valoracion))
       .filter((v: any) =>
         v !== null &&
         v !== undefined

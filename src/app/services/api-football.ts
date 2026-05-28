@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { BackendService } from './backend';
-
 import {
   HttpClient,
   HttpParams
@@ -103,25 +101,56 @@ buscarJugador(
 
 }
 
-  // ==========================================
-  // IMPORTAR JUGADOR
-  // ==========================================
-
+// ==========================================
+// IMPORTAR JUGADOR DESDE API-FOOTBALL
+// ==========================================
 importarJugador(
   playerId: number,
   temporada: number
 ) {
 
+  // =====================================
+  // BACKEND TRWM
+  // =====================================
+
+  if (
+    this.backendService.obtenerBackend()
+      === 'TRWM'
+  ) {
+
+    let params = new HttpParams()
+
+      .set(
+        'season',
+        temporada
+      );
+
+    return this.http.post<any>(
+
+      `${this.getBaseUrl()}/api/jugadores/import/${playerId}`,
+
+      {},
+
+      { params }
+
+    );
+
+  }
+
+  // =====================================
+  // BACKEND DWSC
+  // =====================================
+
   let params = new HttpParams()
 
     .set(
-      'season',
+      'temporada',
       temporada
     );
 
   return this.http.post<any>(
 
-    `${this.getBaseUrl()}/api/jugadores/import/${playerId}`,
+    `${this.getBaseUrl()}/api/external/importar/${playerId}`,
 
     {},
 

@@ -10,70 +10,29 @@
 
     <!-- NOMBRE -->
     <div class="col-md-4">
-
-      <input
-        type="text"
-        class="form-control"
-        [(ngModel)]="nombre"
-        placeholder="Nombre del jugador">
-
+      <input type="text" class="form-control" [(ngModel)]="nombre" placeholder="Nombre del jugador">
     </div>
 
     <!-- TEMPORADA -->
     <div class="col-md-3">
-
-      <input
-        type="number"
-        class="form-control"
-        [(ngModel)]="season"
-        placeholder="Temporada">
-
+      <input type="number" class="form-control"  [(ngModel)]="season"  placeholder="Temporada">
     </div>
 
     <!-- LIGA -->
-<div class="col-md-3">
-
-  <select
-    class="form-select"
-    [(ngModel)]="liga">
-
-    <option [value]="39">
-      Premier League
-    </option>
-
-    <option [value]="140">
-      LaLiga
-    </option>
-
-    <option [value]="135">
-      Serie A
-    </option>
-
-    <option [value]="78">
-      Bundesliga
-    </option>
-
-    <option [value]="61">
-      Ligue 1
-    </option>
-
+  <div class="col-md-3">
+  <select class="form-select" [(ngModel)]="liga">
+    <option [value]="39">  Premier League</option>
+    <option [value]="140"> LaLiga</option>
+    <option [value]="135"> Serie A </option>
+    <option [value]="78"> Bundesliga </option>
+    <option [value]="61"> Ligue 1 </option>
   </select>
-
 </div>
 
     <!-- BOTÓN -->
     <div class="col-md-2">
-
-      <button
-        class="btn btn-success w-100"
-        (click)="buscarJugador()">
-
-        Buscar
-
-      </button>
-
+      <button class="btn btn-success w-100" (click)="buscarJugador()"> Buscar</button>
     </div>
-
   </div>
 
   <!-- LOADING -->
@@ -89,14 +48,11 @@
   <div
     *ngIf="mensaje"
     class="alert alert-info">
-
     {{ mensaje }}
-
   </div>
 
  <!-- RESULTADOS -->
 <div class="row">
-
   <div
     class="col-md-4 mb-4"
     *ngFor="let jugador of resultados">
@@ -116,33 +72,19 @@
         ">
 
       <!-- NOMBRE -->
-      <h4 class="text-success">
-
-        {{ jugador.nombre }}
+      <h4 class="text-success"> {{ jugador.nombre }}
 
       </h4>
 
       <!-- EQUIPO -->
       <p>
-
         <strong>Equipo:</strong>
-
         {{ jugador.equipo }}
-
       </p>
 
       <!-- IMPORTAR -->
-      <button
-        class="btn btn-success mt-auto"
-        (click)="importarJugador(jugador)">
-
-        Importar
-
-      </button>
-
+      <button class="btn btn-success mt-auto" (click)="importarJugador(jugador)">  Importar</button>
     </div>
-
   </div>
-
 </div>
 </div>
