@@ -175,3 +175,14 @@ h3 {
   color: #9bd3ff;
   border: none;
 }
+h1 {
+
+  opacity: 1 !important;
+
+  text-shadow: none !important;
+
+  filter: none !important;
+
+  font-weight: 700;
+
+}

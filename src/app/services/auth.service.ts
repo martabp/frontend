@@ -210,22 +210,18 @@ export class AuthService {
   // REGISTRO
   // ============================
 
-  registrar(
-    usuario: any
-  ) {
+registrar(
+  usuario: any
+): Observable<any> {
 
-    return this.http.post(
+  return this.http.post<any>(
 
-      `${this.apiUrl}/register`,
+    `${this.apiUrl}/register`,
 
-      usuario,
+    usuario
 
-      {
-        responseType: 'text'
-      }
+  );
 
-    );
-
-  }
+}
 
 }

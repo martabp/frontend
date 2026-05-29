@@ -1,28 +1,37 @@
-import { Component } from '@angular/core';
+import {
+
+  Component,
+
+  ChangeDetectorRef
+
+} from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import { FormsModule } from '@angular/forms';
 
-import { Router }
-from '@angular/router';
+import { Router } from '@angular/router';
 
-import { AuthService }
-from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
+
   selector: 'app-register',
 
   standalone: true,
 
   imports: [
+
     CommonModule,
+
     FormsModule
+
   ],
 
   templateUrl: './register.html',
 
   styleUrls: ['./register.css']
+
 })
 
 export class RegisterComponent {
@@ -57,7 +66,9 @@ export class RegisterComponent {
 
     private authService: AuthService,
 
-    private router: Router
+    private router: Router,
+
+    private cdRef: ChangeDetectorRef
 
   ) {}
 
@@ -67,7 +78,10 @@ export class RegisterComponent {
 
   registrar(): void {
 
-    // Limpiar mensajes
+    // ==========================================
+    // LIMPIAR MENSAJES
+    // ==========================================
+
     this.mensajeExito = '';
 
     this.mensajeError = '';
@@ -89,6 +103,7 @@ export class RegisterComponent {
         'Debe completar todos los campos';
 
       return;
+
     }
 
     // ==========================================
@@ -103,26 +118,54 @@ export class RegisterComponent {
         // ======================================
         // ÉXITO
         // ======================================
-   
-     next: () => {
 
-  // Limpiar error
-  this.mensajeError = '';
+        next: (respuesta: any) => {
 
-  // Mostrar éxito
-  this.mensajeExito =
-    'Usuario registrado correctamente';
+          console.log(
+            'RESPUESTA OK:',
+            respuesta
+          );
 
-  /*
-   * Limpiar formulario
-   */
-  this.usuario.nombre = '';
+          // =========================
+          // LIMPIAR ERROR
+          // =========================
 
-  this.usuario.email = '';
+          this.mensajeError = '';
 
-  this.usuario.password = '';
+          // =========================
+          // MENSAJE ÉXITO
+          // =========================
 
-},
+          this.mensajeExito =
+
+            respuesta.body?.mensaje ||
+
+            respuesta.mensaje ||
+
+            'Usuario registrado correctamente';
+
+          // =========================
+          // LIMPIAR FORMULARIO
+          // =========================
+
+          this.usuario = {
+
+            nombre: '',
+
+            email: '',
+
+            password: ''
+
+          };
+
+          // =========================
+          // REFRESCAR VISTA
+          // =========================
+
+          this.cdRef.detectChanges();
+
+        },
+
         // ======================================
         // ERROR
         // ======================================
@@ -131,7 +174,10 @@ export class RegisterComponent {
 
           console.error(error);
 
-          // Limpiar éxito
+          // =========================
+          // LIMPIAR ÉXITO
+          // =========================
+
           this.mensajeExito = '';
 
           // =========================
@@ -140,20 +186,11 @@ export class RegisterComponent {
 
           if (error.status === 400) {
 
-            if (
-              typeof error.error ===
-              'string'
-            ) {
+            this.mensajeError =
 
-              this.mensajeError =
-                error.error;
+              error.error?.mensaje ||
 
-            } else {
-
-              this.mensajeError =
-                'El email ya está registrado';
-
-            }
+              'El email ya está registrado';
 
           }
 
@@ -178,6 +215,12 @@ export class RegisterComponent {
               'Error al registrar usuario';
 
           }
+
+          // =========================
+          // REFRESCAR VISTA
+          // =========================
+
+          this.cdRef.detectChanges();
 
         }
 
