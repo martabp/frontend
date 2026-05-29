@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { HttpClient } from '@angular/common/http';
-
 import { Observable, tap } from 'rxjs';
-
 import { BackendService } from './backend';
 
 @Injectable({
@@ -15,9 +12,7 @@ export class AuthService {
   constructor(
 
     private http: HttpClient,
-
-    private backendService:
-      BackendService
+    private backendService:BackendService
 
   ) {}
 
@@ -31,21 +26,16 @@ export class AuthService {
     // ============================
 
     if (
-      this.backendService.obtenerBackend()
-      === 'TRWM'
+      this.backendService.obtenerBackend() === 'TRWM'
     ) {
-
-      return `${this.backendService
-        .getBaseUrl()}/api/auth`;
-
+      return `${this.backendService.getBaseUrl()}/api/auth`;
     }
 
     // ============================
     // BACKEND DWSC
     // ============================
 
-    return `${this.backendService
-      .getBaseUrl()}/auth`;
+    return `${this.backendService.getBaseUrl()}/auth`;
 
   }
 
@@ -79,7 +69,7 @@ export class AuthService {
 
         localStorage.setItem(
 
-          'token',
+            `token_${this.backendService.obtenerBackend()}`,
 
           response.token
 
@@ -89,14 +79,7 @@ export class AuthService {
         // GUARDAR USUARIO
         // =====================================
 
-        localStorage.setItem(
-
-          'usuario',
-
-          response.usuario.nombre
-
-
-        );
+      localStorage.setItem('usuario', response.usuario?.nombre || response.usuario?.email || response.nombre ||response.email || 'Usuario');
 
       })
 
@@ -110,13 +93,10 @@ export class AuthService {
 
   logout(): void {
 
-    localStorage.removeItem(
-      'token'
-    );
+     localStorage.removeItem(`token_${this.backendService.obtenerBackend()}`
+  );
 
-    localStorage.removeItem(
-      'usuario'
-    );
+    localStorage.removeItem( 'usuario');
 
   }
 
@@ -126,11 +106,12 @@ export class AuthService {
 
   getToken(): string | null {
 
-    return localStorage.getItem(
-      'token'
+    return localStorage.getItem( `token_${this.backendService.obtenerBackend()}`
+
     );
 
   }
+
 
   // ============================
   // OBTENER ROL DESDE JWT
@@ -154,12 +135,9 @@ export class AuthService {
 
       );
 
-      console.log(
-        'PAYLOAD JWT:',
-        payload
-      );
+     //console.log('PAYLOAD JWT:',payload);
 
-      return payload.rol;
+      return payload.rol || payload.role ||  payload.authorities?.[0] || null;
 
     } catch (error) {
 
@@ -202,7 +180,7 @@ export class AuthService {
 
   esAdmin(): boolean {
 
-    return this.getRol() === 'ADMIN';
+    return this.estaLogueado() && this.getRol() === 'ADMIN';
 
   }
 

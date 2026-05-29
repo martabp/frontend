@@ -48,8 +48,7 @@ private get apiUrl(): string {
   // BACKEND DWSC
   // ============================
 
-  return `${this.backendService
-    .getBaseUrl()}/api/comentarios`;
+  return 'http://localhost:8082/api/comentarios';
 
 }
 

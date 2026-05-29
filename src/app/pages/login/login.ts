@@ -181,8 +181,7 @@ export class Login {
 
           else if (error.status === 0) {
 
-            this.mensaje =
-              'No se puede conectar con el servidor';
+            this.mensaje = 'No se puede conectar con el servidor';
 
           }
 
@@ -192,8 +191,7 @@ export class Login {
 
           else {
 
-            this.mensaje =
-              'Error al iniciar sesión';
+            this.mensaje = 'Error al iniciar sesión';
 
           }
 

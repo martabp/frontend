@@ -2,6 +2,11 @@ import {
   HttpInterceptorFn
 } from '@angular/common/http';
 
+import { inject } from '@angular/core';
+
+import { BackendService }
+from '../services/backend';
+
 export const jwtInterceptor:
 HttpInterceptorFn = (
 
@@ -10,8 +15,16 @@ HttpInterceptorFn = (
 
 ) => {
 
+  const backendService =
+    inject(BackendService);
+
   const token =
-    localStorage.getItem('token');
+    localStorage.getItem(
+
+      `token_${backendService
+        .obtenerBackend()}`
+
+    );
 
   if (token) {
 
@@ -22,11 +35,15 @@ HttpInterceptorFn = (
 
           Authorization:
             `Bearer ${token}`
+
         }
+
       });
 
     return next(cloned);
+
   }
 
   return next(req);
+
 };

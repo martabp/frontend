@@ -124,9 +124,16 @@ implements OnInit {
           this.jugadores = [...respuesta.data];
           this.jugadoresOriginales = [...respuesta.data];
           this.jugadores.forEach((jugador: any) => {
-            const id =
-              jugador._id || jugador.id;
-            this.cargarComentarios(id);
+const id =
+  jugador._id || jugador.id;
+
+
+
+if (id) {
+
+  this.cargarComentarios(id);
+
+}
 
           });
           this.mensajeError = '';
@@ -190,10 +197,22 @@ implements OnInit {
     this.mensajeExito = '';
     this.mensajeError = '';
 
-    if (!this.nuevoJugador.nombre) {
-      this.mensajeError = 'El nombre del jugador es obligatorio';
-      return;
-    }
+  if (
+
+  !this.nuevoJugador.nombre ||
+  !this.nuevoJugador.equipo ||
+  !this.nuevoJugador.liga ||
+  !this.nuevoJugador.posicion ||
+  !this.nuevoJugador.edad
+
+) {
+
+  this.mensajeError =
+    'Todos los campos son obligatorios';
+
+  return;
+
+}
 
     this.apiFootballService
       .crearJugador(this.nuevoJugador)
@@ -260,9 +279,22 @@ implements OnInit {
   actualizarJugador(): void {
 
     console.log(this.jugadorEditando);
+  if (
 
-    this.mensajeExito = '';
-    this.mensajeError = '';
+  !this.jugadorEditando.nombre ||
+  !this.jugadorEditando.equipo ||
+  !this.jugadorEditando.liga ||
+  !this.jugadorEditando.posicion 
+
+
+) {
+
+  this.mensajeError =
+    'Todos los campos son obligatorios';
+
+  return;
+
+}
     this.apiFootballService
       .actualizarJugador(
         this.jugadorEditando.id || this.jugadorEditando._id,

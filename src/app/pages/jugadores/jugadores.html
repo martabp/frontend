@@ -383,18 +383,14 @@
 
                       <!-- MAPA -->
 
-                      <a
-                        *ngIf="comentario.geolocalizacion"
-                        class="text-info"
-                        target="_blank"
-                        [href]="'https://www.google.com/maps?q='
-                        + comentario.geolocalizacion.latitude
-                        + ','
-                        + comentario.geolocalizacion.longitude">
+                    <a *ngIf="comentario.geolocalizacion" class="text-info" target="_blank"
 
-                        📍 Ver ubicación
+                     [href]="'https://www.google.com/maps?q='  + (comentario.geolocalizacion.latitud ?? comentario.geolocalizacion.latitude) + ',' + (comentario.geolocalizacion.longitud
+      ?? comentario.geolocalizacion.longitude)">
 
-                      </a>
+  📍 Ver ubicación
+
+</a>
 
                       <!-- ELIMINAR COMENTARIO -->
 

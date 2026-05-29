@@ -11,7 +11,6 @@ import { BackendService } from '../../services/backend';
   
   imports: [
     CommonModule,
-    RouterLink
   ],
 
   templateUrl: './home.html',
