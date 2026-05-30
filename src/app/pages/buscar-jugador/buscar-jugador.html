@@ -51,40 +51,37 @@
     {{ mensaje }}
   </div>
 
- <!-- RESULTADOS -->
+
+<!-- RESULTADOS -->
+
 <div class="row">
+
   <div
     class="col-md-4 mb-4"
     *ngFor="let jugador of resultados">
 
-    <div
-      class="card bg-dark text-white border-success h-100 text-center p-3">
+    <player-card
 
-      <!-- FOTO -->
-      <img
-        [src]="jugador.imagen"
-        class="rounded-circle mx-auto mb-3"
-        alt="Jugador"
-        style="
-          width: 120px;
-          height: 120px;
-          object-fit: cover;
-        ">
+      [nombre]="jugador.nombre"
+      [equipo]="jugador.equipo"
+      [posicion]="jugador.posicion"
+      [foto]="jugador.imagen">
 
-      <!-- NOMBRE -->
-      <h4 class="text-success"> {{ jugador.nombre }}
+    </player-card>
 
-      </h4>
+    <button
 
-      <!-- EQUIPO -->
-      <p>
-        <strong>Equipo:</strong>
-        {{ jugador.equipo }}
-      </p>
+      class="btn btn-success w-100 mt-2"
 
-      <!-- IMPORTAR -->
-      <button class="btn btn-success mt-auto" (click)="importarJugador(jugador)">  Importar</button>
-    </div>
+      (click)="importarJugador(jugador)">
+
+      Importar
+
+    </button>
+
   </div>
+
 </div>
+
+
 </div>

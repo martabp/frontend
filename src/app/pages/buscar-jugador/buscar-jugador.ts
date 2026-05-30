@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
-
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ApiFootballService } from '../../services/api-football';
 
 import { JugadoresService } from '../../services/jugadores';
@@ -11,7 +11,8 @@ import { JugadoresService } from '../../services/jugadores';
   selector: 'app-buscar-jugador',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './buscar-jugador.html'
+  templateUrl: './buscar-jugador.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class BuscarJugador {

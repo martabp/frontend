@@ -533,53 +533,7 @@ crearComentario(
 
   }
 
-  navigator.geolocation
-    .getCurrentPosition(
-      (position) => {
-        const comentario = {
-          jugadorId: jugadorId,
-          autor: this.authService.getUsuario(),
-          contenido: texto,
-          valoracion:
-            this.valoracionComentario[
-              jugadorId
-            ],
 
-          geolocalizacion: {
-            latitud: position.coords.latitude,
-            longitud: position.coords.longitude
-          }
-        };
-
-        this.comentariosService
-          .crearComentario(comentario)
-          .subscribe({
-            next: () => {
-
-              this.mensajeExito = 'Comentario añadido correctamente';
-              this.mensajeError = '';
-              this.nuevoComentario[ jugadorId ] = '';
-              this.cargarComentarios( jugadorId);
-
-              setTimeout(() => {
-                this.mensajeExito = '';
-              }, 3000);
-
-            },
-
-            error: (error) => {
-              console.error(error);
-              this.mensajeError =  'Error al crear comentario';
-            }
-          });
-      },
-
-      (error) => {
-
-        console.error(error);
-        this.mensajeError = 'No se pudo obtener la geolocalización';
-      }
-    );
 }
 
 // ==========================================

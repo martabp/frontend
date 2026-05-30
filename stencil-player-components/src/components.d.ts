@@ -10,15 +10,33 @@ export namespace Components {
         /**
           * The first name
          */
-        "first": string;
+        "first"?: string;
         /**
           * The last name
          */
-        "last": string;
+        "last"?: string;
         /**
           * The middle name
          */
-        "middle": string;
+        "middle"?: string;
+    }
+    interface PlayerCard {
+        /**
+          * @default ''
+         */
+        "equipo": string;
+        /**
+          * @default ''
+         */
+        "foto": string;
+        /**
+          * @default ''
+         */
+        "nombre": string;
+        /**
+          * @default ''
+         */
+        "posicion": string;
     }
 }
 declare global {
@@ -28,8 +46,15 @@ declare global {
         prototype: HTMLMyComponentElement;
         new (): HTMLMyComponentElement;
     };
+    interface HTMLPlayerCardElement extends Components.PlayerCard, HTMLStencilElement {
+    }
+    var HTMLPlayerCardElement: {
+        prototype: HTMLPlayerCardElement;
+        new (): HTMLPlayerCardElement;
+    };
     interface HTMLElementTagNameMap {
         "my-component": HTMLMyComponentElement;
+        "player-card": HTMLPlayerCardElement;
     }
 }
 declare namespace LocalJSX {
@@ -47,15 +72,40 @@ declare namespace LocalJSX {
          */
         "middle"?: string;
     }
+    interface PlayerCard {
+        /**
+          * @default ''
+         */
+        "equipo"?: string;
+        /**
+          * @default ''
+         */
+        "foto"?: string;
+        /**
+          * @default ''
+         */
+        "nombre"?: string;
+        /**
+          * @default ''
+         */
+        "posicion"?: string;
+    }
 
     interface MyComponentAttributes {
         "first": string;
         "middle": string;
         "last": string;
     }
+    interface PlayerCardAttributes {
+        "nombre": string;
+        "equipo": string;
+        "posicion": string;
+        "foto": string;
+    }
 
     interface IntrinsicElements {
         "my-component": Omit<MyComponent, keyof MyComponentAttributes> & { [K in keyof MyComponent & keyof MyComponentAttributes]?: MyComponent[K] } & { [K in keyof MyComponent & keyof MyComponentAttributes as `attr:${K}`]?: MyComponentAttributes[K] } & { [K in keyof MyComponent & keyof MyComponentAttributes as `prop:${K}`]?: MyComponent[K] };
+        "player-card": Omit<PlayerCard, keyof PlayerCardAttributes> & { [K in keyof PlayerCard & keyof PlayerCardAttributes]?: PlayerCard[K] } & { [K in keyof PlayerCard & keyof PlayerCardAttributes as `attr:${K}`]?: PlayerCardAttributes[K] } & { [K in keyof PlayerCard & keyof PlayerCardAttributes as `prop:${K}`]?: PlayerCard[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -63,6 +113,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "my-component": LocalJSX.IntrinsicElements["my-component"] & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            "player-card": LocalJSX.IntrinsicElements["player-card"] & JSXBase.HTMLAttributes<HTMLPlayerCardElement>;
         }
     }
 }
