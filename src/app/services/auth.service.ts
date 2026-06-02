@@ -178,11 +178,24 @@ export class AuthService {
   // COMPROBAR ADMIN
   // ============================
 
+ // esAdmin(): boolean {
+
+    //return this.estaLogueado() && this.getRol() === 'ADMIN' ;
+
+  //}
   esAdmin(): boolean {
 
-    return this.estaLogueado() && this.getRol() === 'ADMIN';
+  const rol = this.getRol();
 
-  }
+  return [
+
+    'ADMIN',
+    'admin',
+    'ROLE_ADMIN'
+
+  ].includes(rol || '');
+
+}
 
   // ============================
   // REGISTRO

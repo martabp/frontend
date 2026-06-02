@@ -243,8 +243,15 @@ if (id) {
 
           console.error(error);
 
-          if (error.status === 400) {
-            this.mensajeError = 'Datos inválidos o incompletos';
+         if (error.status === 400) {
+             console.log(error.error);
+            if (error.error.errors) {
+                this.mensajeError = Object.values(error.error.errors)[0] as string;
+
+             }
+             else {
+               this.mensajeError =  'Datos inválidos o incompletos';
+             }
           } else if (error.status === 401) {
             this.mensajeError = 'Debe iniciar sesión';
           } else if (error.status === 403) {
@@ -319,23 +326,19 @@ if (id) {
 
           console.error(error);
           this.mensajeExito = '';
-          if (error.status === 400) {
+         if (error.status === 400) {
 
-            this.mensajeError =
-              error.error?.mensaje || error.error?.message ||  'Faltan campos obligatorios';
+        this.mensajeError = error.error?.mensaje || error.error?.message ||   error.error?.errors?.edad || 'Faltan campos obligatorios';
+        }
+        else if (error.status === 401) {
+           this.mensajeError =  'No estás autenticado';
           }
-
-          else if (error.status === 401) {
-            this.mensajeError =  'No estás autenticado';
-          }
-
-          else if (error.status === 403) {
-            this.mensajeError = 'No tienes permisos';
-          }
-
-          else {
-            this.mensajeError = 'Error al actualizar jugador';
-          }
+        else if (error.status === 403) {
+           this.mensajeError = 'No tienes permisos';
+        }
+        else {
+          this.mensajeError = 'Error al actualizar jugador';
+        }
         }
       });
   }
@@ -524,6 +527,9 @@ crearComentario(
   const texto =
     this.nuevoComentario[jugadorId];
 
+  const valoracion =
+    this.valoracionComentario[jugadorId] || 1;
+
   if (
     !texto ||
     texto.trim() === ''
@@ -533,6 +539,69 @@ crearComentario(
 
   }
 
+  navigator.geolocation.getCurrentPosition(
+
+    (position) => {
+
+      const comentario = {
+
+        jugadorId: jugadorId,
+
+        autor:
+          localStorage.getItem('usuario'),
+
+        contenido: texto,
+
+        valoracion: valoracion,
+
+        geolocalizacion: {
+
+          latitud:
+            position.coords.latitude,
+
+          longitud:
+            position.coords.longitude
+
+        }
+
+      };
+
+      this.comentariosService
+        .crearComentario(comentario)
+
+        .subscribe({
+
+          next: () => {
+
+            this.nuevoComentario[jugadorId] = '';
+
+            this.valoracionComentario[jugadorId] = 1;
+
+            this.cargarComentarios(jugadorId);
+
+            this.mensajeExito =
+              'Comentario añadido correctamente';
+
+            this.mensajeError = '';
+
+          },
+
+          error: (error) => {
+
+            console.error(error);
+
+            this.mensajeError =
+              'Error al añadir comentario';
+
+            this.mensajeExito = '';
+
+          }
+
+        });
+
+    }
+
+  );
 
 }
 

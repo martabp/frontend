@@ -28,18 +28,14 @@ export class Home {
 ) {}
 entrarDWSC(): void {
 
-  this.backendService
-    .seleccionarBackend('DWSC');
-
+  this.backendService.seleccionarBackend('DWSC');
   this.router.navigate(['/jugadores']);
 
 }
 
 entrarTRWM(): void {
 
-  this.backendService
-    .seleccionarBackend('TRWM');
-
+  this.backendService.seleccionarBackend('TRWM');
   this.router.navigate(['/jugadores']);
 
 }
